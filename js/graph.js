@@ -48,7 +48,7 @@ function setupSVGStructure() {
  * Idempotente: limpa o panGroup antes de redesenhar para evitar duplicatas.
  * Deve ser chamado após setupSVGStructure().
  */
-function renderGraph() {
+async function renderGraph() {
     const { panGroup } = App.state;
 
     // Guard: remove tudo exceto o bg-rect antes de redesenhar
@@ -69,6 +69,11 @@ function renderGraph() {
         const charGroup = createNodeSVG(node);
         panGroup.appendChild(charGroup);
     });
+
+    // Bacon
+    // const bacon = await loadSvg('../img/bacon.svg');
+    
+    // panGroup.appendChild(bacon);
 }
 
 
@@ -143,6 +148,20 @@ function createNodeSVG(node) {
 
     group.append(body, head, eye1, eye2, labelEl);
     return group;
+}
+
+
+/**
+ * Carrega uma imagem svg e retorna um elemento <svg> do html.
+ * @param {*} path - Caminho da imagem
+ * @returns Elemento <svg> do html.
+ */
+async function loadSvg(path) {
+    const domParser = new DOMParser();
+    const baconRes = await fetch(path);
+    const baconXml = domParser.parseFromString(await baconRes.text(), 'image/svg+xml');
+
+    return baconXml.activeElement;
 }
 
 

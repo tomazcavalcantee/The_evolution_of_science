@@ -1,0 +1,51 @@
+{
+    "_comment": [
+        "chapters.json — Registro de todos os capítulos do projeto.",
+        "",
+        "PARA COLABORADORES:",
+        "  Ao criar um novo capítulo, adicione uma entrada aqui.",
+        "  O 'id' deve ser idêntico ao chapterId em data.js e ao nome",
+        "  do arquivo em chapters/  (sem a extensão .js).",
+        "",
+        "Campos obrigatórios: id, title, status, edgeId",
+        "Campos opcionais:    author, description, notes"
+    ],
+    "chapters": [
+        {
+            "id": "cap_demarcacao",
+            "title": "O Problema da Demarcação",
+            "edgeId": "edge_demarcacao",
+            "status": "stub",
+            "author": "",
+            "description": "Debate interativo entre Thagard e Popper sobre o critério de demarcação entre ciência e pseudociência.",
+            "notes": ""
+        },
+        {
+            "id": "cap_peru",
+            "title": "O Peru de Russell",
+            "edgeId": "edge_peru",
+            "status": "stub",
+            "author": "",
+            "description": "Ilustração do problema da indução através da parábola do peru de Bertrand Russell.",
+            "notes": ""
+        },
+        {
+            "id": "cap_revolucoes",
+            "title": "Revoluções Científicas",
+            "edgeId": "edge_paradigmas",
+            "status": "stub",
+            "author": "",
+            "description": "Debate sobre modelos de progresso científico: acumulação linear (Popper) vs. rupturas de paradigma (Kuhn).",
+            "notes": ""
+        }
+    ],
+    "_schema": {
+        "id":          "string — chave única, igual ao nome do arquivo .js",
+        "title":       "string — título legível exibido para referência",
+        "edgeId":      "string — id da aresta em gameData.edges que lança este capítulo",
+        "status":      "enum: 'stub' | 'in-progress' | 'done'",
+        "author":      "string — nome ou e-mail do colaborador responsável",
+        "description": "string — resumo do que o capítulo deve cobrir",
+        "notes":       "string — observações livres para a equipe"
+    }
+}

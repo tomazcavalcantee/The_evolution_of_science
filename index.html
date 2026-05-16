@@ -8,23 +8,61 @@
 </head>
 <body>
     <main class="container">
-        <div class="graph-panel">
-            <svg id="graph-container" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <div class="map-container map-frame">
+            <svg id="graph-container" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
             </svg>
         </div>
 
         <div class="story-panel">
-            <h2 id="story-title"></h2>
-            
-            <div id="story-content">
-                </div>
-            
-            <div class="interaction-buttons" id="button-container">
-            </div>
+            <h2 id="main-title">O Mapa Epistêmico</h2>
+
+            <div id="intro-content"></div>
+
+            <hr class="papyri-hr">
+
+            <div id="detail-content" class="fade-in"></div>
+
+            <div class="interaction-buttons" id="button-container"></div>
         </div>
     </main>
 
+    <!--
+    =====================================================================
+    ORDEM DE CARREGAMENTO DOS SCRIPTS — não altere sem ler abaixo
+    =====================================================================
+
+    1. data.js       → Define `gameData` (nós, arestas, intro).
+                       É a fonte da verdade; edite aqui para mudar o mapa.
+
+    2. chapters/*    → Cada capítulo registra a si mesmo em `App.chapters`
+                       via `App.registerChapter(id, module)`.
+                       Adicione novos arquivos aqui E em chapters.json.
+
+    3. state.js      → Cria o namespace global `App` com estado compartilhado.
+                       Deve vir ANTES dos módulos do motor.
+
+    4. graph.js      → Renderização SVG (nós, arestas, atualização de posição).
+    5. story.js      → Painel narrativo (intro, detalhes de aresta, lançamento de capítulo).
+    6. interaction.js→ Drag de bonequinhos e pan do mapa.
+    7. main.js       → Ponto de entrada: orquestra a inicialização no DOMContentLoaded.
+    =====================================================================
+    -->
+
+    <!-- 1. Estado global (App) — deve vir primeiro de tudo -->
+    <script src="js/state.js"></script>
+
+    <!-- 2. Dados do mapa -->
     <script src="js/data.js"></script>
+
+    <!-- 3. Capítulos (registram-se em App.chapters automaticamente) -->
+    <script src="chapters/cap_demarcacao.js"></script>
+    <script src="chapters/cap_peru.js"></script>
+    <script src="chapters/cap_revolucoes.js"></script>
+
+    <!-- 4. Motor do aplicativo -->
+    <script src="js/graph.js"></script>
+    <script src="js/story.js"></script>
+    <script src="js/interaction.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

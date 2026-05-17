@@ -7,13 +7,32 @@
 
 App.registerChapter("cap_peru", {
     start(container) {
+        // Agora 'container' é o 'chapter-ui', que está vazio e ocupa a lateral inteira.
+        
         container.innerHTML = `
-            <h3>O Peru de Russell</h3>
+            <h2>O Peru Indutivista</h2>
             <p>
-                <em>Cena interativa ainda não implementada.</em><br>
-                Edite <code>chapters/cap_peru.js</code> para construir o debate.
+                Bem-vindo à fazenda. 
+                Se algo acontece repetidas vezes, é uma lei da natureza, certo?
             </p>
+            
+            <div id="peru-game-area" style="padding: 20px; background: #fff; border: 2px dashed #ccc; margin: 20px 0;">
+                <p style="text-align: center;">[ dá pra fazer alguma coisa aqui :O ]</p>
+            </div>
+
+            <button id="btn-back-map" class="btn-choice"> Voltar ao Mapa</button>
         `;
+
+        // Lógica para voltar ao mapa
+        const btnBack = document.getElementById('btn-back-map');
+        btnBack.addEventListener('click', () => {
+            // 1. Alterna a interface de texto
+            document.getElementById('chapter-ui').style.display = 'none';
+            document.getElementById('map-ui').style.display = 'block';
+            
+            // 2. Apaga a fazendinha e redesenha os filósofos e as linhas!
+            renderGraph();
+        });
 
         this.renderBackground();
     },

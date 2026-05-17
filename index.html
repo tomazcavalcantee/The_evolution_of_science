@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Epistemologia Interativa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,53 +13,46 @@
             </svg>
         </div>
 
-        <div class="story-panel">
-            <h2 id="main-title">O Mapa Epistêmico</h2>
+<div class="story-panel">
+    <div id="map-ui">
+        <h2 id="main-title">O Mapa Epistêmico</h2>
+        <div id="intro-content"></div>
+        <hr class="papyri-hr">
+        <div id="detail-content" class="fade-in"></div>
+        <div class="interaction-buttons" id="button-container"></div>
+    </div>
 
-            <div id="intro-content"></div>
-
-            <hr class="papyri-hr">
-
-            <div id="detail-content" class="fade-in"></div>
-
-            <div class="interaction-buttons" id="button-container"></div>
-        </div>
+    <div id="chapter-ui" style="display: none;">
+    </div>
+</div>
     </main>
 
     <!--
     =====================================================================
-    ORDEM DE CARREGAMENTO DOS SCRIPTS — não altere sem ler abaixo
+    ORDEM DE CARREGAMENTO — não altere sem ler abaixo
     =====================================================================
+    1. state.js        → cria o namespace App (DEVE ser o primeiro)
+    2. data.js         → define Icons, gameData (debateClasses, nodes, edges)
+    3. chapters/*.js   → cada capítulo chama App.registerChapter(...)
+    4. graph.js / story.js / interaction.js → motor da aplicação
+    5. main.js         → dispara a inicialização
 
-    1. data.js       → Define `gameData` (nós, arestas, intro).
-                       É a fonte da verdade; edite aqui para mudar o mapa.
-
-    2. chapters/*    → Cada capítulo registra a si mesmo em `App.chapters`
-                       via `App.registerChapter(id, module)`.
-                       Adicione novos arquivos aqui E em chapters.json.
-
-    3. state.js      → Cria o namespace global `App` com estado compartilhado.
-                       Deve vir ANTES dos módulos do motor.
-
-    4. graph.js      → Renderização SVG (nós, arestas, atualização de posição).
-    5. story.js      → Painel narrativo (intro, detalhes de aresta, lançamento de capítulo).
-    6. interaction.js→ Drag de bonequinhos e pan do mapa.
-    7. main.js       → Ponto de entrada: orquestra a inicialização no DOMContentLoaded.
+    Ao adicionar um novo capítulo:
+      a) Crie chapters/cap_meu_novo.js  (copie _template.js)
+      b) Adicione o <script> abaixo, ANTES de graph.js
+      c) Adicione a entrada em chapters.json
     =====================================================================
     -->
 
-    <!-- 1. Estado global (App) — deve vir primeiro de tudo -->
     <script src="js/state.js"></script>
-
-    <!-- 2. Dados do mapa -->
     <script src="js/data.js"></script>
 
-    <!-- 3. Capítulos (registram-se em App.chapters automaticamente) -->
+    <!-- Capítulos -->
     <script src="chapters/cap_demarcacao.js"></script>
+    <script src="chapters/cap_demarcacao_kuhn.js"></script>
     <script src="chapters/cap_peru.js"></script>
-    <script src="chapters/cap_revolucoes.js"></script>
 
-    <!-- 4. Motor do aplicativo -->
+    <!-- Motor -->
     <script src="js/graph.js"></script>
     <script src="js/story.js"></script>
     <script src="js/interaction.js"></script>

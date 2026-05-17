@@ -6,19 +6,152 @@ App.registerChapter("cap_peru", {
     state: {
         step: 0,
         story: [
-            { speaker: "Bacon", text: "A observação repetida nos leva à verdade universal. Vejam este peru empírico." },
-            { speaker: "Peru", text: "Glu glu! O humano me traz milho todos os dias às 9h da manhã. O padrão é uma lei natural!" },
-            { speaker: "Hume", text: "Mas o que garante que o amanhã será igual ao passado? Isso é apenas o hábito da sua mente." },
-            { speaker: "Bacon", text: "A natureza é uniforme! A indução nos garante que o Sol nascerá, e que o peru será alimentado." },
-            { speaker: "Hume", text: "Pois bem... Eu ouvi dizer que amanhã é véspera de Natal." },
-            { speaker: "Peru", text: "Espera... O que isso quer dizer? O milho vai atrasar?" }
-        ],
+    {
+        speaker: "Bacon",
+        text: "Sábia decisão, jogador. Você escolheu o caminho da prática e da observação."
+    },
+    {
+        speaker: "Bacon",
+        text: "A ciência não se faz com adivinhações, mas com fatos reais."
+    },
+    {
+        speaker: "Bacon",
+        text: "Ao alimentar o peru hoje, iniciamos um teste."
+    },
+    {
+        speaker: "Bacon",
+        text: "Se repetirmos isso todos os dias e o resultado for o mesmo, teremos uma lei da natureza."
+    },
+    {
+        speaker: "Bacon",
+        text: "A experiência é a única base segura para a verdade."
+    },
+
+    {
+        speaker: "Hume",
+        text: "Sua fé na constância é quase tocante, Bacon."
+    },
+    {
+        speaker: "Hume",
+        text: "Mas acredito que o jogador tenha apenas se rendido à ilusão do hábito."
+    },
+    {
+        speaker: "Hume",
+        text: "Só porque o peru comeu e sobreviveu hoje..."
+    },
+    {
+        speaker: "Hume",
+        text: "...não significa que sobreviverá novamente amanhã."
+    },
+    {
+        speaker: "Hume",
+        text: "O que vemos não é causa e efeito."
+    },
+    {
+        speaker: "Hume",
+        text: "Vemos apenas dois fatos distintos em sequência."
+    },
+    {
+        speaker: "Hume",
+        text: "Essa regularidade em que você acredita..."
+    },
+    {
+        speaker: "Hume",
+        text: "...é apenas uma exigência da sua mente."
+    },
+
+    {
+        speaker: "Bacon",
+        text: "*suspiro* Se dependêssemos das suas dúvidas, Hume..."
+    },
+    {
+        speaker: "Bacon",
+        text: "...a humanidade nunca teria saído das cavernas."
+    },
+    {
+        speaker: "Bacon",
+        text: "Não estamos adivinhando o futuro."
+    },
+    {
+        speaker: "Bacon",
+        text: "Quando investigamos um fato sob várias condições e com método..."
+    },
+    {
+        speaker: "Bacon",
+        text: "...deciframos a natureza passo a passo."
+    },
+    {
+        speaker: "Bacon",
+        text: "Entender as regras do mundo não é um delírio do cérebro."
+    },
+    {
+        speaker: "Bacon",
+        text: "É o que nos dá controle sobre a realidade."
+    },
+
+    {
+        speaker: "Hume",
+        text: "Essas regras estão só na sua cabeça, Bacon!"
+    },
+    {
+        speaker: "Hume",
+        text: "Olhe bem para esse animal."
+    },
+    {
+        speaker: "Hume",
+        text: "Ele também professa a sua filosofia."
+    },
+    {
+        speaker: "Hume",
+        text: "Habituou-se a associar o movimento de nossas mãos ao alimento."
+    },
+    {
+        speaker: "Hume",
+        text: "Projeta o passado no futuro com absoluta certeza."
+    },
+    {
+        speaker: "Hume",
+        text: "Mas o ontem jamais dita o amanhã."
+    },
+    {
+        speaker: "Hume",
+        text: "Se o destino deste infeliz for o banquete de logo mais..."
+    },
+    {
+        speaker: "Hume",
+        text: "...toda a sua estrutura de certezas ruirá."
+    },
+    {
+        speaker: "Hume",
+        text: "Em um único e fatal instante."
+    }
+],
         // Ajuste as coordenadas conforme necessário para o seu cenário de fundo
         chars: {
-            "Bacon": { x: 150, y: 550, file: "bacon.svg" }, 
-            "Peru":  { x: 450, y: 600, file: "peru.svg" }, 
-            "Hume":  { x: 750, y: 550, file: "hume.svg" }  
-        }
+    "Bacon": { 
+        x: 80, 
+        y: 500, 
+        width: 220,
+        height: 250,
+        file: "bacon.svg" 
+    },
+
+    "Peru":  { 
+        x: 330, 
+        y: 430,
+        width: 310,
+        height: 220,
+        file: "peru.svg" 
+    },
+
+    "Hume":  { 
+        x: 650, 
+        y: 500,
+        width: 240,
+        height: 270,
+        file: "hume.svg" 
+    }
+}
     },
 
     start() {
@@ -66,36 +199,37 @@ App.registerChapter("cap_peru", {
     },
 
     renderCharacters() {
-        const { panGroup } = App.state;
-        Object.entries(this.state.chars).forEach(([nome, info]) => {
-            this.drawChar(panGroup, info.x, info.y, nome, info.file);
-        });
-    },
+    const { panGroup } = App.state;
 
-    drawChar(parent, x, y, label, fileName) {
-        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        g.setAttribute("class", "char-instance");
+    Object.entries(this.state.chars).forEach(([nome, info]) => {
+        this.drawChar(
+            panGroup,
+            info.x,
+            info.y,
+            info.width,
+            info.height,
+            info.file
+        );
+    });
+},
 
-        // Criando a imagem do personagem
-        const img = document.createElementNS("http://www.w3.org/2000/svg", "image");
-        img.setAttributeNS(null, "href", `assets/${fileName}`);
-        img.setAttributeNS(null, "x", x);
-        img.setAttributeNS(null, "y", y);
-        img.setAttributeNS(null, "width", "120");  // Ajuste o tamanho conforme seus SVGs
-        img.setAttributeNS(null, "height", "120");
+drawChar(parent, x, y, width, height, fileName) {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "char-instance");
 
-        // Nome do personagem abaixo dele
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", x + 60); // Centralizado em relação à largura (120/2)
-        t.setAttribute("y", y + 140); 
-        t.setAttribute("text-anchor", "middle");
-        t.setAttribute("font-family", "'Cinzel', serif");
-        t.setAttribute("font-size", "22");
-        t.setAttribute("fill", "#2c1e16");
-        t.textContent = label;
+    // Criando a imagem do personagem
+    const img = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    img.setAttributeNS(null, "href", `assets/${fileName}`);
+    img.setAttributeNS(null, "x", x);
+    img.setAttributeNS(null, "y", y);
+    img.setAttributeNS(null, "width", width);
+    img.setAttributeNS(null, "height", height);
 
-        g.appendChild(img);
-        g.appendChild(t);
-        parent.appendChild(g);
-    }
+    // Opcional: mantém a proporção do SVG
+    img.setAttributeNS(null, "preserveAspectRatio", "xMidYMid meet");
+
+    // Adiciona apenas a imagem
+    g.appendChild(img);
+    parent.appendChild(g);
+}
 });

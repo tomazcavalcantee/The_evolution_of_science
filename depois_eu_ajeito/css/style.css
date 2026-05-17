@@ -61,8 +61,9 @@ body {
     display: none !important;
 }
 
-/* Painel do mapa (SVG) */
+
 .map-container {
+    position: relative;
     flex: 1.5;
     background-color: #f5eedc; /* Levemente mais escuro que o papel para destacar */
 

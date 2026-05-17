@@ -168,6 +168,10 @@ body {
     -webkit-user-select: none;
 }
 
+.map-character {
+    transform: scale(0.1);
+}
+
 
 /* --------------------------------------------------------------------------
    4. Painel Narrativo

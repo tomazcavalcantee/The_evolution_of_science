@@ -41,8 +41,10 @@ function setupInteractionEvents() {
  */
 function onMouseDown(e, nodeDataMap) {
     const mouseCoord = getSVGMousePosition(e);
-    const nodeEl = e.target.closest('.node-group');
+    // const nodeEl = e.target.closest('.node-group');
+    const nodeEl = e.target.closest('.map-character');
 
+    console.log(nodeEl)
     if (nodeEl) {
         // --- Drag de bonequinho individual ---
         const nodeData = nodeDataMap[nodeEl.getAttribute('data-id')];

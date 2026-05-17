@@ -78,11 +78,12 @@ const gameData = {
 
     // Nós — cada filósofo/corrente no mapa
     nodes: [
-        { id: "thagard",     label: "Paul Thagard",  x: 150, y: 150, color: "#27ae60" },
-        { id: "popper",      label: "Karl Popper",   x: 850, y: 150, color: "#d35400" },
-        { id: "kuhn",        label: "Thomas Kuhn",   x: 500, y: 400, color: "#7f8c8d" },
-        { id: "indutivista", label: "Indutivismo",   x: 150, y: 700, color: "var(--indutivista-color)" },
-        { id: "empiricista", label: "Empiricismo",   x: 850, y: 700, color: "var(--empiricista-color)" },
+        { id: "thagard",     label: "Paul Thagard",  x: 150, y: 150, color: "#27ae60", imgUrl: "../img/bacon.svg" },
+        { id: "popper",      label: "Karl Popper",   x: 850, y: 150, color: "#d35400", imgUrl: "../img/bacon.svg" },
+        { id: "kuhn",        label: "Thomas Kuhn",   x: 500, y: 400, color: "#7f8c8d", imgUrl: "../img/bacon.svg" },
+        // { id: "indutivista", label: "Indutivismo",   x: 150, y: 700, color: "var(--indutivista-color)" },
+        { id: "empiricista", label: "Empiricismo",   x: 850, y: 700, color: "var(--empiricista-color)", imgUrl: "../img/hume.svg" },
+        { id: "bacon", label: "Indutivismo",   x: 150, y: 700, color: "var(--indutivista-color)", imgUrl: "../img/bacon.svg" },
     ],
 
     // Arestas — cada disputa filosófica entre dois nós
@@ -98,7 +99,7 @@ const gameData = {
         },
         {
             id: "edge_peru",
-            source: "indutivista",
+            source: "bacon",
             target: "empiricista",
             title: "O Peru de Russell",
             desc: "Se a ciência é baseada na indução (observar que o Sol nasce todo dia), quão seguros estamos do futuro? Russell ilustra com um peru que, após ser alimentado todo dia às 9h, conclui que isso é uma lei universal... até a véspera de Natal.",

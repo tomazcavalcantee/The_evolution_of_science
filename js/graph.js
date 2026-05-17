@@ -66,14 +66,11 @@ async function renderGraph() {
 
     // Nós (bonequinhos)
     gameData.nodes.forEach(node => {
-        const charGroup = createNodeSVG(node);
-        panGroup.appendChild(charGroup);
-    });
+        // const charGroup = createNodeSVG(node);
+        // panGroup.appendChild(charGroup);
 
-    // Bacon
-    // const bacon = await loadSvg('../img/bacon.svg');
-    
-    // panGroup.appendChild(bacon);
+        addCharacterToMap(node, panGroup);
+    });
 }
 
 
@@ -151,6 +148,21 @@ function createNodeSVG(node) {
 }
 
 
+async function addCharacterToMap(node, panGroup) {
+    // Escala de redimensionamento da imagem
+    const scale = 0.1;
+    const { id, x, y, imgUrl } = node;
+    const img = await loadSvg(imgUrl);
+
+    img.classList.add('map-character');
+    img.setAttribute("data-id", id);
+    img.setAttribute("x", (x - scale*img.getAttribute('width')/2) / scale);
+    img.setAttribute("y", (y - scale*img.getAttribute('height')/2) / scale);
+
+    panGroup.append(img);
+}
+
+
 /**
  * Carrega uma imagem svg e retorna um elemento <svg> do html.
  * @param {*} path - Caminho da imagem
@@ -178,18 +190,21 @@ function updateDraggedNodePosition() {
 
     const { x, y } = selectedNodeData;
 
-    selectedElement.querySelector('.character-body').setAttribute("d", buildBodyPath(x, y));
-    selectedElement.querySelector('.character-head').setAttribute("cx", x);
-    selectedElement.querySelector('.character-head').setAttribute("cy", y - 18);
+    selectedElement.setAttribute("x", x);
+    selectedElement.setAttribute("y", y);
 
-    const eyes = selectedElement.querySelectorAll('.character-eye');
-    eyes[0].setAttribute("cx", x - 6);
-    eyes[0].setAttribute("cy", y - 18);
-    eyes[1].setAttribute("cx", x + 6);
-    eyes[1].setAttribute("cy", y - 18);
+    // selectedElement.querySelector('.character-body').setAttribute("d", buildBodyPath(x, y));
+    // selectedElement.querySelector('.character-head').setAttribute("cx", x);
+    // selectedElement.querySelector('.character-head').setAttribute("cy", y - 18);
 
-    selectedElement.querySelector('.character-label').setAttribute("x", x);
-    selectedElement.querySelector('.character-label').setAttribute("y", y + 45);
+    // const eyes = selectedElement.querySelectorAll('.character-eye');
+    // eyes[0].setAttribute("cx", x - 6);
+    // eyes[0].setAttribute("cy", y - 18);
+    // eyes[1].setAttribute("cx", x + 6);
+    // eyes[1].setAttribute("cy", y - 18);
+
+    // selectedElement.querySelector('.character-label').setAttribute("x", x);
+    // selectedElement.querySelector('.character-label').setAttribute("y", y + 45);
 
     const nodeMap = buildNodeMap();
     gameData.edges.forEach(edge => {

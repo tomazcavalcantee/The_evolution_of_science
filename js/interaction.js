@@ -1,13 +1,12 @@
 /**
  * interaction.js — Drag de bonequinhos e pan do mapa
  *
- * Responsabilidades:
+ * Papel:
  *   - Detectar mousedown em nós vs. fundo do mapa
  *   - Atualizar App.state durante o drag
  *   - Chamar graph.js para redesenhar posições no mousemove
  *
  * Depende de: state.js (App.state), graph.js (updateDraggedNodePosition), data.js (gameData)
- * Não depende de: story.js
  */
 
 
@@ -33,8 +32,7 @@ function setupInteractionEvents() {
 // ------------------------------------------------------------------
 
 /**
- * Determina o que foi clicado (bonequinho ou fundo do mapa)
- * e inicializa o estado de drag adequado.
+ * Determina o que foi clicado (bonequinho ou fundo do mapa) e inicializa o estado de drag
  *
  * @param {MouseEvent} e
  * @param {Object.<string, NodeData>} nodeDataMap
@@ -52,7 +50,6 @@ function onMouseDown(e, nodeDataMap) {
         App.state.selectedElement   = nodeEl;
         App.state.selectedNodeData  = nodeData;
 
-        // Offset = posição do mouse em relação ao centro do bonequinho
         App.state.nodeDragOffset.x  = mouseCoord.x - nodeData.x;
         App.state.nodeDragOffset.y  = mouseCoord.y - nodeData.y;
 
@@ -61,7 +58,6 @@ function onMouseDown(e, nodeDataMap) {
         App.state.isDraggingNode = false;
         App.state.isDraggingMap  = true;
 
-        // Offset = posição do mouse em relação ao pan atual
         App.state.mapPanOffset.x = mouseCoord.x - App.state.currentPan.x;
         App.state.mapPanOffset.y = mouseCoord.y - App.state.currentPan.y;
     }
@@ -69,7 +65,7 @@ function onMouseDown(e, nodeDataMap) {
 
 
 /**
- * Executa o movimento durante o drag, seja de um bonequinho ou do mapa.
+ * Executa o movimento durante o drag.
  * @param {MouseEvent} e
  */
 function onMouseMove(e) {
@@ -79,7 +75,7 @@ function onMouseMove(e) {
     const mouseCoord = getSVGMousePosition(e);
 
     if (isDraggingNode && selectedNodeData) {
-        // Atualiza os dados do nó no gameData (source of truth)
+        // Atualiza os dados do nó no gameData
         selectedNodeData.x = mouseCoord.x - App.state.nodeDragOffset.x;
         selectedNodeData.y = mouseCoord.y - App.state.nodeDragOffset.y;
 

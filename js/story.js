@@ -1,11 +1,10 @@
 /**
  * story.js — Painel narrativo (lado direito da tela)
  *
- * Responsabilidades:
- *   - Renderizar o texto de introdução estático
+ * Papel:
+ *   - Renderizar o texto de introdução
  *   - Renderizar os detalhes de uma aresta ao ser clicada
- *     (inclui badge colorido da classe de debate)
- *   - Lançar o capítulo interativo via App.chapters
+ *   - Lançar o capítulo via App.chapters
  *
  * Depende de: state.js (App.chapters), data.js (gameData)
  */
@@ -82,21 +81,17 @@ function launchChapter(chapterId) {
     const chapter = App.chapters[chapterId];
 
     if (!chapter) {
-        // ... (seu código de warning e erro atual) ...
         return;
     }
 
-    // 1. Transição de Interface
+    // Transição de Interface
     const mapUi = document.getElementById('map-ui');
     const chapterUi = document.getElementById('chapter-ui');
 
-    // Esconde os elementos fixos do mapa (título, HR, etc.)
     mapUi.style.display = 'none';
     
-    // Limpa o painel do capítulo e o exibe
     chapterUi.innerHTML = '';
     chapterUi.style.display = 'block';
 
-    // 2. Entregamos a chave do novo painel inteiro para o capítulo
     chapter.start(chapterUi);
 }

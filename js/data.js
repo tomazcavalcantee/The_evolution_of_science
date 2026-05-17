@@ -1,7 +1,6 @@
 /**
  * data.js — Fonte da verdade do mapa epistêmico
  *
- * PARA COLABORADORES:
  *   - Filósofos → gameData.nodes
  *   - Classes de debate → gameData.debateClasses
  *   - Arestas → gameData.edges  (referenciam um debateClassId)
@@ -13,7 +12,7 @@
 
 
 // ------------------------------------------------------------------
-// Ícones SVG inline — declare ANTES de gameData
+// Ícones SVG inline
 // ------------------------------------------------------------------
 const Icons = {
 
@@ -67,7 +66,7 @@ const gameData = {
     ],
 
     // ------------------------------------------------------------------
-    // Nós — filósofos e correntes
+    // Nós
     // ------------------------------------------------------------------
     /**
      * @typedef {Object} NodeData
@@ -90,7 +89,7 @@ const gameData = {
     ],
 
     // ------------------------------------------------------------------
-    // Classes de debate — grupos temáticos de disputas
+    // Classes de debate
     // ------------------------------------------------------------------
     /**
      * @typedef {Object} DebateClass
@@ -100,8 +99,6 @@ const gameData = {
      * @property {string} icon    - SVG inline para o botão de ação
      * @property {string} desc    - Descrição geral da classe (exibida no painel)
      *
-     * PARA COLABORADORES:
-     *   Adicione aqui antes de criar arestas que usem a nova classe.
      */
     debateClasses: [
         {
@@ -142,7 +139,7 @@ const gameData = {
     ],
 
     // ------------------------------------------------------------------
-    // Arestas — disputas entre filósofos
+    // Arestas
     // ------------------------------------------------------------------
     /**
      * @typedef {Object} EdgeData
@@ -154,12 +151,8 @@ const gameData = {
      * @property {string} desc          - Descrição desta disputa (painel lateral)
      * @property {string} chapterId     - Capítulo lançado ao clicar "Iniciar Debate"
      *
-     * NOTA: Dois filósofos podem ter MAIS DE UMA aresta se pertencerem
-     * a debateClasses diferentes. O motor as curva automaticamente para
-     * que não se sobreponham.
      */
     edges: [
-        // --- Problema da Demarcação ---
         {
             id: "edge_demarcacao_thagard_popper",
             source: "thagard",
@@ -179,7 +172,6 @@ const gameData = {
             chapterId: "cap_demarcacao_kuhn",
         },
 
-        // --- Problema da Indução ---
         {
             id: "edge_inducao_ind_emp",
             source: "bacon",
@@ -190,7 +182,6 @@ const gameData = {
             chapterId: "cap_peru",
         },
 
-        // --- O Problema de Gettier ---
         {
             id: "edge_gettier_platao",
             source: "platao",
@@ -201,7 +192,6 @@ const gameData = {
             chapterId: "cap_gettier",
         },
 
-        // --- Método e Procedimentos ---
         {
             id: "edge_metodo_bacon_descartes",
             source: "descartes",
@@ -212,7 +202,6 @@ const gameData = {
             chapterId: "cap_metodo",
         },
 
-        // --- Observação e Teoria ---
         {
             id: "edge_observacao_positivismo_popper",
             source: "carnap",

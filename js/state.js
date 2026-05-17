@@ -5,7 +5,6 @@
  * usarem variáveis globais soltas. Isso facilita rastrear bugs
  * e entender o que está acontecendo em qualquer momento.
  *
- * PARA COLABORADORES:
  *   - Nunca declare `let isDragging...` no topo de outro arquivo.
  *   - Use `App.state.isDraggingNode`, etc.
  *   - Adicione novos campos de estado aqui com um comentário explicativo.
@@ -14,16 +13,16 @@
 const App = {
 
     // ------------------------------------------------------------------
-    // Estado de interação (gerenciado por interaction.js)
+    // Estado de interação (interaction.js)
     // ------------------------------------------------------------------
     state: {
         isDraggingNode: false,   // true enquanto o usuário arrasta um bonequinho
         isDraggingMap:  false,   // true enquanto o usuário arrasta o fundo do mapa
 
         selectedElement:  null,  // O elemento <g> do bonequinho em arrasto
-        selectedNodeData: null,  // O objeto JSON do bonequinho em arrasto (de gameData.nodes)
+        selectedNodeData: null,  // O objeto JSON do boneco em arrasto (gameData.nodes)
 
-        nodeDragOffset: { x: 0, y: 0 }, // Offset mouse → bonequinho no início do drag
+        nodeDragOffset: { x: 0, y: 0 }, // Offset mouse → boneco no início do drag
         mapPanOffset:   { x: 0, y: 0 }, // Offset mouse → câmera no início do pan
         currentPan:     { x: 0, y: 0 }, // Posição atual da "câmera" do mapa
 
@@ -31,11 +30,11 @@ const App = {
     },
 
     // ------------------------------------------------------------------
-    // Registro de capítulos (gerenciado pelos arquivos em chapters/)
+    // Registro de capítulos (chapters/)
     // ------------------------------------------------------------------
     /**
      * Mapa de id → módulo de capítulo.
-     * Preenchido automaticamente via App.registerChapter().
+     * Preenchido via App.registerChapter().
      * @type {Object.<string, ChapterModule>}
      */
     chapters: {},

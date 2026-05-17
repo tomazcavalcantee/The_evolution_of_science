@@ -1,7 +1,7 @@
 /**
  * graph.js — Renderização SVG do mapa
  *
- * Responsabilidades:
+ * Papel:
  *   - Criar a estrutura de pan (<g id="pan-layer">)
  *   - Desenhar nós e arestas coloridas por classe de debate
  *   - Curvar arestas múltiplas entre o mesmo par de nós
@@ -59,13 +59,10 @@ function renderGraph() {
         panGroup.appendChild(pathEl);
     });
 
-    // Nós (bonequinhos)
+    // Nós
     gameData.nodes.forEach(node => {
         panGroup.appendChild(createNodeSVG(node));
     });
-
-    // Legenda fixa (fora do pan-layer, não se move)
-    //renderLegend(classMap);
 }
 
 
@@ -189,82 +186,6 @@ function createNodeSVG(node) {
 
 
 // ------------------------------------------------------------------
-// Legenda das classes de debate
-// ------------------------------------------------------------------
-
-/**
- * Renderiza a legenda fixa no canto inferior esquerdo do SVG.
- * Fica fora do pan-layer — não se move quando o mapa é arrastado.
- */
-
-
-function renderLegend(classMap) {
-    const svg = document.getElementById('graph-container');
-
-    // Remove legenda anterior se existir
-    const old = document.getElementById('legend-group');
-    if (old) old.remove();
-
-    const classes = gameData.debateClasses;
-    const rowH = 28, padding = 14, dotR = 7;
-    const legendH = classes.length * rowH + padding * 2;
-    const legendW = 230;
-    const x0 = 16, y0 = 800 - legendH - 16; // canto inferior esquerdo
-
-    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    group.setAttribute("id", "legend-group");
-
-
-    // Fundo
-    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    bg.setAttribute("x", x0); bg.setAttribute("y", y0);
-    bg.setAttribute("width", legendW); bg.setAttribute("height", legendH);
-    bg.classList.add("legend-bg");
-    group.appendChild(bg);
-
-    // Título
-    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    title.setAttribute("x", x0 + padding);
-    title.setAttribute("y", y0 + padding + 4);
-    title.classList.add("legend-title");
-    title.textContent = "Classes de Debate";
-    group.appendChild(title);
-
-    // Separador
-    const sep = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    sep.setAttribute("x1", x0 + padding); sep.setAttribute("x2", x0 + legendW - padding);
-    sep.setAttribute("y1", y0 + padding + 12); sep.setAttribute("y2", y0 + padding + 12);
-    sep.classList.add("legend-sep");
-    group.appendChild(sep);
-
-    // Itens
-    classes.forEach((cls, i) => {
-        const rowY = y0 + padding + 22 + i * rowH;
-
-        // Bolinha colorida
-        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        dot.setAttribute("cx", x0 + padding + dotR);
-        dot.setAttribute("cy", rowY + dotR / 2);
-        dot.setAttribute("r", dotR);
-        dot.setAttribute("fill", cls.color);
-        dot.classList.add("legend-dot");
-        group.appendChild(dot);
-
-        // Label da classe
-        const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        lbl.setAttribute("x", x0 + padding + dotR * 2 + 8);
-        lbl.setAttribute("y", rowY + dotR);
-        lbl.classList.add("legend-label");
-        lbl.setAttribute("fill", cls.color);
-        lbl.textContent = cls.label;
-        group.appendChild(lbl);
-    });
-
-    svg.appendChild(group); // Fora do pan-layer → posição fixa
-}
-
-
-// ------------------------------------------------------------------
 // Atualização de posição durante o drag
 // ------------------------------------------------------------------
 
@@ -324,11 +245,6 @@ const { selectedElement, selectedNodeData } = App.state;
 /**
  * Distribui offsets de curvatura entre arestas que conectam o mesmo par.
  *
- * Algoritmo:
- *   - Canonicaliza o par (source < target alfabeticamente)
- *   - Agrupa as arestas por par
- *   - Distribui offsets simetricamente: [-40, 0] (n=2) ou [-40, 0, 40] (n=3) etc.
- *
  * @returns {Object.<string, number>} mapa edgeId → curveOffset
  */
 function computePairOffsets() {
@@ -356,18 +272,16 @@ function computePairOffsets() {
 
 /**
  * Constrói o atributo `d` de um path de curva quadrática de Bézier.
- * O ponto de controle é o ponto médio deslocado perpendicularmente.
  *
  * @param {{x:number, y:number}} src
  * @param {{x:number, y:number}} tgt
- * @param {number} offset - deslocamento perpendicular (0 = linha reta)
+ * @param {number} offset
  * @returns {string}
  */
 function buildCurvePath(src, tgt, offset) {
     const mx = (src.x + tgt.x) / 2;
     const my = (src.y + tgt.y) / 2;
 
-    // Vetor perpendicular unitário
     const dx  = tgt.x - src.x;
     const dy  = tgt.y - src.y;
     const len = Math.sqrt(dx * dx + dy * dy) || 1;

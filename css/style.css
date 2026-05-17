@@ -170,6 +170,20 @@ body {
 
 
 /* --------------------------------------------------------------------------
+   3. Elementos da Página Inicial
+   -------------------------------------------------------------------------- */
+
+.character {
+    width: 60px;
+    height: 80px;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+
+/* --------------------------------------------------------------------------
    4. Painel Narrativo
    -------------------------------------------------------------------------- */
 
@@ -247,6 +261,25 @@ body {
 
 .btn-choice:active {
     transform: scale(0.98);
+}
+
+.btn {
+    background-image: url('../img/btn.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 1.5rem;
+    min-height: 4rem;
+    min-width: 10rem;
+    border: none;
+    background-color: transparent;
+
+    cursor: pointer;
+    font-family: "Gloria Hallelujah", cursive;
+}
+
+.btn:active {
+    transform: translateY(5px);
 }
 
 /* Ícone SVG dentro dos botões */

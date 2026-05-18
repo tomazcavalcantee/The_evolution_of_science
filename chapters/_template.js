@@ -8,55 +8,62 @@
  * 1. Copie este arquivo para `chapters/cap_meu_tema.js`
  *    (o nome deve ser igual ao `chapterId` em gameData.edges).
  *
- * 2. Substitua "cap_meu_tema" pelo seu chapterId real em todos os lugares.
+ * 2. Substitua "cap_meu_tema" pelo seu chapterId real.
  *
- * 3. Implemente o método `start(container)`:
- *    - `container` é o <div id="detail-content"> do painel lateral.
- *    - Você pode usar innerHTML, appendChild, ou qualquer lógica de UI.
- *    - Para debates interativos, adicione botões com event listeners.
+ * 3. Implemente `start(container)`:
+ *    - `container` é o div #chapter-ui (painel lateral inteiro).
+ *    - Inclua sempre um botão "Voltar ao Mapa" que chame `_goBack()`.
+ *    - Para cenas visuais no mapa, use `App.state.panGroup` diretamente
+ *      e restaure com `renderGraph()` ao voltar.
  *
- * 4. Adicione seu arquivo em dois lugares do index.html:
- *    a) <script src="chapters/cap_meu_tema.js"></script>
- *    b) A entrada correspondente em chapters.json.
+ * 4. Adicione o <script> em index.html ANTES de graph.js.
  *
  * 5. Em data.js, adicione uma aresta com `chapterId: "cap_meu_tema"`.
+ *
+ * 6. Atualize chapters.json com os metadados do capítulo.
  * ============================================================
  */
 
 App.registerChapter("cap_meu_tema", {
 
     /**
-     * Ponto de entrada do capítulo.
-     * Chamado por story.js quando o usuário clica em "Iniciar Debate".
+     * Ponto de entrada. Chamado por story.js ao clicar "Iniciar Debate".
      *
-     * @param {HTMLElement} container - O div #detail-content do painel lateral.
+     * @param {HTMLElement} container — o div #chapter-ui do painel lateral.
      */
     start(container) {
-        container.innerHTML = `
-            <h3>Título do Debate</h3>
-            <p>Descrição introdutória da cena interativa...</p>
+        this._container = container;
 
-            <p><em>Implemente sua cena aqui.</em></p>
+        container.innerHTML = `
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="margin-top: 0;">Título do Debate</h3>
+                <p>Descrição introdutória da cena interativa...</p>
+                <p><em>Implemente sua cena aqui.</em></p>
+            </div>
+
+            <div class="chapter-controls">
+                <button id="btn-back" class="btn-choice">← Voltar ao Mapa</button>
+            </div>
         `;
 
-        // Exemplo de botão de escolha interativa:
-        // const btn = document.createElement('button');
-        // btn.className = 'btn-choice';
-        // btn.textContent = 'Minha opção';
-        // btn.addEventListener('click', () => this._handleChoice('opcao_a', container));
-        // container.appendChild(btn);
+        document.getElementById('btn-back')
+            .addEventListener('click', () => this._goBack());
+    },
+
+    /** Restaura o painel lateral e o mapa epistêmico. */
+    _goBack() {
+        document.getElementById('chapter-ui').style.display = 'none';
+        document.getElementById('map-ui').style.display     = 'block';
+        renderGraph(); // redesenha os filósofos e as arestas
     },
 
     // ------------------------------------------------------------------
-    // Métodos auxiliares internos do capítulo (prefixo _ por convenção)
+    // Métodos auxiliares internos (prefixo _ por convenção)
     // ------------------------------------------------------------------
 
-    /**
-     * Exemplo de handler para escolha do usuário.
-     * @param {string} choice
-     * @param {HTMLElement} container
-     */
-    _handleChoice(choice, container) {
-        container.innerHTML = `<p>Você escolheu: <strong>${choice}</strong>.</p>`;
+    _handleChoice(choice) {
+        // Exemplo de resposta a uma escolha do usuário
+        this._container.querySelector('p').textContent =
+            `Você escolheu: ${choice}.`;
     },
 });

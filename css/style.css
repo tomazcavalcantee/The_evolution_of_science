@@ -309,3 +309,93 @@ body {
 }
 .btn-choice:hover .turkey-head-group { transform: rotate(15deg) translateY(-3px); }
 .btn-choice:hover .turkey-wattle     { fill: #e74c3c; transform: scale(1.15) rotate(-10deg); }
+
+/* --------------------------------------------------------------------------
+   9. Capítulo — transição de cena e painel de diálogo
+   -------------------------------------------------------------------------- */
+
+/* Fade-out da cena no SVG ao trocar de capítulo */
+.fade-out {
+    animation: fadeOut 0.4s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Painel do capítulo ocupa o story-panel inteiro */
+#chapter-ui {
+    flex: 1;
+    display: none;         /* mostrado por story.js via inline style */
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Caixa de diálogo */
+#peru-dialogue-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(253, 246, 227, 0.7);
+    border: 1px solid var(--line-color);
+    border-radius: 4px;
+}
+
+.chapter-speaker {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 0.95em;
+    font-weight: bold;
+    color: var(--accent-red);
+    margin-bottom: 10px !important;
+    margin-top: 0 !important;
+}
+
+.chapter-text {
+    font-size: 1.05em;
+    line-height: 1.7;
+    color: var(--papyri-ink);
+    margin: 0 !important;
+}
+
+/* Botões de controle do capítulo */
+.chapter-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* Estilos da legenda SVG */
+.legend-bg {
+    fill: var(--bg-color);
+    stroke: var(--lightwood-color);
+    stroke-width: 1.5;
+    opacity: 0.95;
+}
+
+.legend-title {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 10px;
+    fill: var(--papyri-ink);
+    dominant-baseline: hanging;
+}
+
+.legend-sep {
+    stroke: var(--line-color);
+    stroke-width: 1;
+}
+
+.legend-dot {
+    opacity: 0.85;
+}
+
+.legend-label {
+    font-family: 'Crimson Text', serif;
+    font-size: 13px;
+    font-weight: 600;
+    dominant-baseline: middle;
+}

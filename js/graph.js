@@ -5,7 +5,6 @@
  *   - Criar a estrutura de pan (<g id="pan-layer">)
  *   - Desenhar nós e arestas coloridas por classe de debate
  *   - Curvar arestas múltiplas entre o mesmo par de nós
- *   - Renderizar a legenda fixa das classes de debate
  *   - Atualizar posições durante o drag
  *
  * Depende de: state.js (App.state), data.js (gameData)
@@ -63,6 +62,7 @@ function renderGraph() {
     gameData.nodes.forEach(node => {
         panGroup.appendChild(createNodeSVG(node));
     });
+
 }
 
 

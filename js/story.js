@@ -91,7 +91,7 @@ function launchChapter(chapterId) {
     mapUi.style.display = 'none';
     
     chapterUi.innerHTML = '';
-    chapterUi.style.display = 'block';
+    chapterUi.style.display = 'flex';
 
     chapter.start(chapterUi);
 }

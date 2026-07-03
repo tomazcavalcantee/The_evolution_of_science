@@ -31,6 +31,9 @@ function renderEdgeDetails(edgeData, debateClass) {
     const detailEl     = document.getElementById('detail-content');
     const btnContainer = document.getElementById('button-container');
 
+    // Registra a edge selecionada no estado
+    App.state.selectedEdgeId = edgeData.id;
+
     // Replay da animação fade-in
     detailEl.classList.remove('fade-in');
     void detailEl.offsetWidth;
@@ -59,20 +62,33 @@ function renderEdgeDetails(edgeData, debateClass) {
 // Funções internas
 // ------------------------------------------------------------------
 
+/**
+ * Cria o botão de iniciar debate. Desabilita se o capítulo
+ * não está registrado (com feedback "Em breve").
+ */
 function createChapterButton(edgeData, debateClass) {
     const btn = document.createElement('button');
-    btn.className = 'btn-choice active';
-
     const icon  = debateClass ? debateClass.icon : '';
-    btn.innerHTML = `${icon} Iniciar Debate`;
+    const isRegistered = !!App.chapters[edgeData.chapterId];
 
-    // Aplica a cor da classe na borda do botão
-    if (debateClass) {
-        btn.style.setProperty('--btn-class-color', debateClass.color);
-        btn.classList.add('btn-choice--colored');
+    if (isRegistered) {
+        btn.className = 'btn-choice active';
+        btn.innerHTML = `${icon} Iniciar Debate`;
+
+        if (debateClass) {
+            btn.style.setProperty('--btn-class-color', debateClass.color);
+            btn.classList.add('btn-choice--colored');
+        }
+
+        btn.addEventListener('click', () => launchChapter(edgeData.chapterId));
+    } else {
+        // Capítulo não registrado — botão desabilitado
+        btn.className = 'btn-choice btn-choice--coming-soon';
+        btn.innerHTML = `${icon} Em breve`;
+        btn.disabled = true;
+        btn.title = 'Este capítulo ainda não foi implementado.';
     }
 
-    btn.addEventListener('click', () => launchChapter(edgeData.chapterId));
     return btn;
 }
 
@@ -81,8 +97,16 @@ function launchChapter(chapterId) {
     const chapter = App.chapters[chapterId];
 
     if (!chapter) {
+        console.warn(`[story.js] Capítulo "${chapterId}" não encontrado.`);
+        const detailEl = document.getElementById('detail-content');
+        if (detailEl) {
+            detailEl.innerHTML += '<p class="chapter-not-found">⚠ Capítulo não encontrado.</p>';
+        }
         return;
     }
+
+    // Registra a transição no estado
+    App.enterChapter(chapterId);
 
     // Transição de Interface
     const mapUi = document.getElementById('map-ui');

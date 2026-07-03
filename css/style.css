@@ -10,6 +10,8 @@
      6. Badge de classe de debate (HTML)
      7. Botões de ação
      8. Animações — peru e fade
+     9. Capítulo — transição de cena e painel de diálogo
+    10. Responsivo
    ========================================================================== */
 
 
@@ -287,6 +289,18 @@ body {
     margin-bottom: 4px;
 }
 
+/* Botão desabilitado — capítulo "Em breve" */
+.btn-choice--coming-soon {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+.btn-choice--coming-soon:hover {
+    transform: none;
+    filter: none;
+    background-color: transparent;
+}
+
 
 /* --------------------------------------------------------------------------
    8. Animações
@@ -333,7 +347,8 @@ body {
     gap: 16px;
 }
 
-/* Caixa de diálogo */
+/* Caixa de diálogo — genérica para qualquer capítulo */
+.chapter-dialogue-box,
 #peru-dialogue-box {
     flex: 1;
     display: flex;
@@ -343,6 +358,15 @@ body {
     background: rgba(253, 246, 227, 0.7);
     border: 1px solid var(--line-color);
     border-radius: 4px;
+}
+
+.chapter-title {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 1.3em;
+    color: var(--accent-red);
+    margin-top: 0;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 .chapter-speaker {
@@ -369,33 +393,22 @@ body {
     margin-top: auto;
 }
 
-/* Estilos da legenda SVG */
-.legend-bg {
-    fill: var(--bg-color);
-    stroke: var(--lightwood-color);
-    stroke-width: 1.5;
-    opacity: 0.95;
-}
 
-.legend-title {
-    font-family: 'Gloria Hallelujah', cursive;
-    font-size: 10px;
-    fill: var(--papyri-ink);
-    dominant-baseline: hanging;
-}
+/* --------------------------------------------------------------------------
+   10. Responsivo
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
 
-.legend-sep {
-    stroke: var(--line-color);
-    stroke-width: 1;
-}
+    .map-container {
+        flex: none;
+        height: 50vh;
+    }
 
-.legend-dot {
-    opacity: 0.85;
-}
-
-.legend-label {
-    font-family: 'Crimson Text', serif;
-    font-size: 13px;
-    font-weight: 600;
-    dominant-baseline: middle;
+    .story-panel {
+        flex: none;
+        padding: 10px 0;
+    }
 }

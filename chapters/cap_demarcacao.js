@@ -3,16 +3,16 @@
  *
  * TODO: Implementar a cena interativa do debate.
  *       Consulte chapters/_template.js para o passo a passo.
+ *
+ * Usa ChapterEngine para navegação (inclui botão "Voltar ao Mapa" automaticamente).
  */
 
 App.registerChapter("cap_demarcacao", {
+    id: "cap_demarcacao",
+    title: "O Problema da Demarcação",
+
     start(container) {
-        container.innerHTML = `
-            <h3>O Problema da Demarcação</h3>
-            <p>
-                <em>Cena interativa ainda não implementada.</em><br>
-                Edite <code>chapters/cap_demarcacao.js</code> para construir o debate.
-            </p>
-        `;
+        this.engine = new ChapterEngine(this, container);
+        this.engine.start();
     },
 });

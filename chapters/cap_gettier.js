@@ -1,5 +1,5 @@
 /**
- * cap_demarcacao_kuhn.js — Demarcação e Anomalias (Popper vs. Kuhn)
+ * cap_gettier.js — O Problema de Gettier (Platão vs. Gettier)
  *
  * TODO: Implementar a cena interativa do debate.
  *       Consulte chapters/_template.js para o passo a passo.
@@ -7,9 +7,9 @@
  * Usa ChapterEngine para navegação (inclui botão "Voltar ao Mapa" automaticamente).
  */
 
-App.registerChapter("cap_demarcacao_kuhn", {
-    id: "cap_demarcacao_kuhn",
-    title: "Demarcação e Anomalias",
+App.registerChapter("cap_gettier", {
+    id: "cap_gettier",
+    title: "O Problema de Gettier",
 
     start(container) {
         this.engine = new ChapterEngine(this, container);

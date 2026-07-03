@@ -4,8 +4,10 @@
  * Papel:
  *   - Criar a estrutura de pan (<g id="pan-layer">)
  *   - Desenhar nós e arestas coloridas por classe de debate
+ *   - Renderizar a legenda de classes de debate
  *   - Curvar arestas múltiplas entre o mesmo par de nós
  *   - Atualizar posições durante o drag
+ *   - Aplicar dimming em arestas não selecionadas
  *
  * Depende de: state.js (App.state), data.js (gameData)
  */
@@ -63,6 +65,11 @@ function renderGraph() {
         panGroup.appendChild(createNodeSVG(node));
     });
 
+    // Legenda
+    renderLegend(panGroup, classMap);
+
+    // Invalida cache de drag (posições podem ter mudado)
+    App.invalidateDragCache();
 }
 
 
@@ -108,12 +115,24 @@ function createEdgeSVG(edge, nodeMap, debateClass, curveOffset) {
     hitPath.style.cursor = "pointer";
 
     hitPath.addEventListener("click", () => {
-        // Desativa todas as arestas
+        // Remove estado ativo e dimmed de todas as arestas
         document.querySelectorAll('.edge').forEach(e => e.classList.remove('active'));
-        document.querySelectorAll('.edge-group').forEach(g => g.classList.remove('active'));
-        // Ativa esta
+        document.querySelectorAll('.edge-group').forEach(g => {
+            g.classList.remove('active');
+            g.classList.remove('dimmed');
+        });
+
+        // Ativa esta aresta
         path.classList.add('active');
         wrapper.classList.add('active');
+
+        // Aplica dimming nas outras arestas
+        document.querySelectorAll('.edge-group').forEach(g => {
+            if (g !== wrapper) {
+                g.classList.add('dimmed');
+            }
+        });
+
         renderEdgeDetails(edge, debateClass);
     });
 
@@ -186,16 +205,99 @@ function createNodeSVG(node) {
 
 
 // ------------------------------------------------------------------
+// Legenda de classes de debate
+// ------------------------------------------------------------------
+
+/**
+ * Renderiza a legenda de classes de debate no canto do mapa SVG.
+ *
+ * @param {SVGGElement} panGroup — grupo raiz do mapa
+ * @param {Object} classMap — mapa debateClassId → debateClass
+ */
+function renderLegend(panGroup, classMap) {
+    const classes = gameData.debateClasses;
+    if (!classes || classes.length === 0) return;
+
+    // Dimensões e posição
+    const LEGEND_X      = 10;
+    const LEGEND_Y      = 10;
+    const PADDING       = 12;
+    const ROW_HEIGHT    = 22;
+    const TITLE_HEIGHT  = 20;
+    const SEP_GAP       = 8;
+    const DOT_RADIUS    = 5;
+    const LEGEND_WIDTH  = 200;
+    const LEGEND_HEIGHT = PADDING + TITLE_HEIGHT + SEP_GAP + (classes.length * ROW_HEIGHT) + PADDING;
+
+    const legendGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    legendGroup.classList.add("legend-group");
+
+    // Fundo
+    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bg.setAttribute("x", LEGEND_X);
+    bg.setAttribute("y", LEGEND_Y);
+    bg.setAttribute("width", LEGEND_WIDTH);
+    bg.setAttribute("height", LEGEND_HEIGHT);
+    bg.classList.add("legend-bg");
+    legendGroup.appendChild(bg);
+
+    // Título
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title.setAttribute("x", LEGEND_X + PADDING);
+    title.setAttribute("y", LEGEND_Y + PADDING);
+    title.classList.add("legend-title");
+    title.textContent = "Classes de Debate";
+    legendGroup.appendChild(title);
+
+    // Separador
+    const sepY = LEGEND_Y + PADDING + TITLE_HEIGHT;
+    const sep = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    sep.setAttribute("x1", LEGEND_X + PADDING);
+    sep.setAttribute("y1", sepY);
+    sep.setAttribute("x2", LEGEND_X + LEGEND_WIDTH - PADDING);
+    sep.setAttribute("y2", sepY);
+    sep.classList.add("legend-sep");
+    legendGroup.appendChild(sep);
+
+    // Itens
+    const startY = sepY + SEP_GAP + DOT_RADIUS;
+    classes.forEach((dc, i) => {
+        const rowY = startY + i * ROW_HEIGHT;
+
+        // Dot colorido
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        dot.setAttribute("cx", LEGEND_X + PADDING + DOT_RADIUS);
+        dot.setAttribute("cy", rowY);
+        dot.setAttribute("r", DOT_RADIUS);
+        dot.setAttribute("fill", dc.color);
+        dot.classList.add("legend-dot");
+        legendGroup.appendChild(dot);
+
+        // Label de texto
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", LEGEND_X + PADDING + DOT_RADIUS * 2 + 8);
+        label.setAttribute("y", rowY);
+        label.setAttribute("fill", dc.color);
+        label.classList.add("legend-label");
+        label.textContent = dc.label;
+        legendGroup.appendChild(label);
+    });
+
+    panGroup.appendChild(legendGroup);
+}
+
+
+// ------------------------------------------------------------------
 // Atualização de posição durante o drag
 // ------------------------------------------------------------------
 
 function updateDraggedNodePosition() {
-const { selectedElement, selectedNodeData } = App.state;
+    const { selectedElement, selectedNodeData } = App.state;
     if (!selectedElement || !selectedNodeData) return;
 
     const { x, y } = selectedNodeData;
 
-    // Procura se o elemento arrastado é uma externo
+    // Procura se o elemento arrastado é uma imagem externa
     const imageEl = selectedElement.querySelector('.character-image');
     
     if (imageEl) {
@@ -218,9 +320,16 @@ const { selectedElement, selectedNodeData } = App.state;
     selectedElement.querySelector('.character-label').setAttribute("x", x);
     selectedElement.querySelector('.character-label').setAttribute("y", y + 45);
 
-    // Atualiza arestas conectadas a este nó
-    const nodeMap     = buildNodeMap();
-    const pairOffsets = computePairOffsets();
+    // Usa cache para performance — calcula uma vez por drag, não por frame
+    if (!App.state._cachedNodeMap) {
+        App.state._cachedNodeMap = buildNodeMap();
+    }
+    if (!App.state._cachedPairOffsets) {
+        App.state._cachedPairOffsets = computePairOffsets();
+    }
+
+    const nodeMap     = App.state._cachedNodeMap;
+    const pairOffsets = App.state._cachedPairOffsets;
 
     gameData.edges.forEach(edge => {
         if (edge.source !== selectedNodeData.id && edge.target !== selectedNodeData.id) return;

@@ -27,6 +27,17 @@ const App = {
         currentPan:     { x: 0, y: 0 }, // Posição atual da "câmera" do mapa
 
         panGroup: null, // Referência ao <g id="pan-layer"> criado por graph.js
+
+        // ---------------------------------------------------------------
+        // Estado de navegação (NOVO)
+        // ---------------------------------------------------------------
+        currentView:    'map',   // 'map' | 'chapter'
+        currentChapter: null,    // id do capítulo ativo ou null
+        selectedEdgeId: null,    // id da edge selecionada no mapa ou null
+
+        // Cache para performance durante drag
+        _cachedNodeMap:     null,
+        _cachedPairOffsets: null,
     },
 
     // ------------------------------------------------------------------
@@ -57,11 +68,46 @@ const App = {
         }
         this.chapters[id] = module;
     },
+
+    // ------------------------------------------------------------------
+    // Helpers de transição (usados por ChapterEngine e story.js)
+    // ------------------------------------------------------------------
+
+    /**
+     * Transição para a view de capítulo.
+     * @param {string} chapterId
+     */
+    enterChapter(chapterId) {
+        this.state.currentView    = 'chapter';
+        this.state.currentChapter = chapterId;
+    },
+
+    /**
+     * Transição de volta ao mapa.
+     */
+    returnToMap() {
+        this.state.currentView    = 'map';
+        this.state.currentChapter = null;
+        this.state.selectedEdgeId = null;
+    },
+
+    /**
+     * Invalida o cache de drag (chamado quando nós mudam de posição).
+     */
+    invalidateDragCache() {
+        this.state._cachedNodeMap     = null;
+        this.state._cachedPairOffsets = null;
+    },
 };
 
 /**
  * @typedef {Object} ChapterModule
+ * @property {string} id - Identificador único do capítulo
+ * @property {string} title - Título exibido na sidebar
  * @property {function(HTMLElement): void} start
  *   Função chamada por story.js ao clicar em "Iniciar Debate".
  *   Recebe o contêiner HTML do painel de história para renderizar o conteúdo.
+ * @property {Object} [chars] - Personagens para a cena SVG (opcional)
+ * @property {string} [background] - Caminho para o fundo SVG da cena (opcional)
+ * @property {Array.<{speaker:string, text:string}>} [story] - Roteiro de diálogos (opcional)
  */

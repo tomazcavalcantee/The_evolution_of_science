@@ -30,7 +30,7 @@
             "title": "O Peru de Russell",
             "edgeId": "edge_inducao_ind_emp",
             "debateClassId": "inducao",
-            "status": "stub",
+            "status": "done",
             "author": "",
             "description": "Ilustração do problema da indução através da parábola do peru de Bertrand Russell.",
             "notes": ""
@@ -77,8 +77,11 @@
         }
     ],
     "_debateClasses": [
-        "demarcacao  — O que separa ciência de pseudociência?",
-        "inducao     — Como justificar inferências indutivas?"
+        "demarcacao   — O que separa ciência de pseudociência?",
+        "inducao      — Como justificar inferências indutivas?",
+        "conhecimento — O que é conhecimento?",
+        "metodo       — Como a ciência deve investigar?",
+        "observacao   — A observação é neutra?"
     ],
     "_schema": {
         "id":            "string — igual ao nome do arquivo .js",
@@ -90,5 +93,4 @@
         "description":   "string — resumo do conteúdo",
         "notes":         "string — observações livres"
     }
-     
 }

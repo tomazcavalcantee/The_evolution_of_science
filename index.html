@@ -3,110 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Epistemologia Interativa</title>
-
-    <!-- Fonte cartunesca / manuscrita -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="css/style.css">
-
-<style>
-    body {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    h1, h2, h3 {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    #main-title {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    button {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    input, textarea {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-/* Aplica a fonte a todos os textos SVG, incluindo os nomes dos filósofos */
-svg text {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Se os nomes forem desenhados com elementos <text> dentro do SVG */
-#graph-container text {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Mantém a mesma fonte no restante da página */
-body,
-h1, h2, h3,
-button,
-input,
-textarea {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Título "O Mapa Epistêmico" */
-#main-title {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-</style>
 </head>
-<body>
-    <main class="container">
-        <div class="map-container map-frame">
-            <svg id="graph-container" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
-            </svg>
-        </div>
 
-        <div class="story-panel">
-            <h2 id="main-title">O Mapa Epistêmico</h2>
 
-            <div id="intro-content"></div>
+<body class="body-home">
 
-            <hr class="papyri-hr">
+    <div class="title-home">
+        <p> Epistemologia Interativa </p>
+        <br></br>
+    </div>
 
-            <div id="detail-content" class="fade-in"></div>
+    <div id="orbit-stage" style="position: relative;">
+    <a href="./mapa-epistemico.html"><button id="center-btn" class="btn">Começar</button></a>
+    <!-- os personagens são injetados via JS -->
+    </div>
 
-            <div class="interaction-buttons" id="button-container"></div>
-        </div>
-    </main>
+    <script src="js/orbit.js"></script>
+    <script src="js/home.js"></script>
 
-    <!--
-    =====================================================================
-    ORDEM DE CARREGAMENTO DOS SCRIPTS — não altere sem ler abaixo
-    =====================================================================
+    <div>
 
-    1. data.js       → Define `gameData` (nós, arestas, intro).
-                       É a fonte da verdade; edite aqui para mudar o mapa.
-
-    2. chapters/*    → Cada capítulo registra a si mesmo em `App.chapters`
-                       via `App.registerChapter(id, module)`.
-                       Adicione novos arquivos aqui E em chapters.json.
-
-    3. state.js      → Cria o namespace global `App` com estado compartilhado.
-                       Deve vir ANTES dos módulos do motor.
-
-    4. graph.js      → Renderização SVG (nós, arestas, atualização de posição).
-    5. story.js      → Painel narrativo (intro, detalhes de aresta, lançamento de capítulo).
-    6. interaction.js→ Drag de bonequinhos e pan do mapa.
-    7. main.js       → Ponto de entrada: orquestra a inicialização no DOMContentLoaded.
-    =====================================================================
-    -->
-
-    <!-- 1. Estado global (App) — deve vir primeiro de tudo -->
-    <script src="js/state.js"></script>
-
-    <!-- 2. Dados do mapa -->
-    <script src="js/data.js"></script>
-
-    <!-- 3. Capítulos (registram-se em App.chapters automaticamente) -->
-    <script src="chapters/cap_demarcacao.js"></script>
-    <script src="chapters/cap_peru.js"></script>
-    <script src="chapters/cap_revolucoes.js"></script>
-
-    <!-- 4. Motor do aplicativo -->
-    <script src="js/graph.js"></script>
-    <script src="js/story.js"></script>
-    <script src="js/interaction.js"></script>
-    <script src="js/main.js"></script>
+    </div>
 </body>
 </html>

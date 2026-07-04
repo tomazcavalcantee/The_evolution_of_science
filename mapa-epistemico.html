@@ -2,108 +2,59 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Epistemologia Interativa</title>
-
-    <!-- Fonte cartunesca / manuscrita -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicação web interativa que apresenta disputas históricas da epistemologia da ciência através de um mapa navegável com filósofos e cenas de debate.">
+    <title>Epistemologia Interativa — O Mapa Epistêmico</title>
     <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="css/style.css">
-
-<style>
-    body {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    h1, h2, h3 {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    #main-title {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    button {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-    input, textarea {
-        font-family: 'Gloria Hallelujah', cursive;
-    }
-/* Aplica a fonte a todos os textos SVG, incluindo os nomes dos filósofos */
-svg text {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Se os nomes forem desenhados com elementos <text> dentro do SVG */
-#graph-container text {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Mantém a mesma fonte no restante da página */
-body,
-h1, h2, h3,
-button,
-input,
-textarea {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-
-/* Título "O Mapa Epistêmico" */
-#main-title {
-    font-family: 'Gloria Hallelujah', cursive;
-}
-</style>
 </head>
-<body>
-    <main class="container">
-        <div class="map-container map-frame">
-            <svg id="graph-container" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
-            </svg>
-        </div>
 
-        <div class="story-panel">
-            <h2 id="main-title">O Mapa Epistêmico</h2>
+<div class="story-panel">
+    <div id="map-ui">
+        <h2 id="main-title">O Mapa Epistêmico</h2>
+        <div id="intro-content"></div>
+        <hr class="papyri-hr">
+        <div id="detail-content" class="fade-in"></div>
+        <div class="interaction-buttons" id="button-container"></div>
+    </div>
 
-            <div id="intro-content"></div>
-
-            <hr class="papyri-hr">
-
-            <div id="detail-content" class="fade-in"></div>
-
-            <div class="interaction-buttons" id="button-container"></div>
-        </div>
+    <div id="chapter-ui" style="display: none;">
+    </div>
+</div>
     </main>
 
     <!--
     =====================================================================
-    ORDEM DE CARREGAMENTO DOS SCRIPTS — não altere sem ler abaixo
+    ORDEM DE CARREGAMENTO
     =====================================================================
+    1. state.js          → cria o namespace App (DEVE ser o primeiro)
+    2. data.js           → define Icons, gameData (debateClasses, nodes, edges)
+    3. chapter_engine.js → motor compartilhado de capítulos (antes dos chapters)
+    4. chapters/*.js     → cada capítulo chama App.registerChapter(...)
+    5. graph.js / story.js / interaction.js → motor da aplicação
+    6. main.js           → dispara a inicialização
 
-    1. data.js       → Define `gameData` (nós, arestas, intro).
-                       É a fonte da verdade; edite aqui para mudar o mapa.
-
-    2. chapters/*    → Cada capítulo registra a si mesmo em `App.chapters`
-                       via `App.registerChapter(id, module)`.
-                       Adicione novos arquivos aqui E em chapters.json.
-
-    3. state.js      → Cria o namespace global `App` com estado compartilhado.
-                       Deve vir ANTES dos módulos do motor.
-
-    4. graph.js      → Renderização SVG (nós, arestas, atualização de posição).
-    5. story.js      → Painel narrativo (intro, detalhes de aresta, lançamento de capítulo).
-    6. interaction.js→ Drag de bonequinhos e pan do mapa.
-    7. main.js       → Ponto de entrada: orquestra a inicialização no DOMContentLoaded.
+    Ao adicionar um novo capítulo:
+      a) Crie chapters/cap_meu_novo.js  (copie _template.js)
+      b) Adicione o <script> abaixo, ANTES de graph.js
+      c) Adicione a entrada em chapters.json
     =====================================================================
     -->
 
-    <!-- 1. Estado global (App) — deve vir primeiro de tudo -->
     <script src="js/state.js"></script>
-
-    <!-- 2. Dados do mapa -->
     <script src="js/data.js"></script>
+    <script src="js/chapter_engine.js"></script>
 
-    <!-- 3. Capítulos (registram-se em App.chapters automaticamente) -->
+    <!-- Capítulos -->
     <script src="chapters/cap_demarcacao.js"></script>
+    <script src="chapters/cap_demarcacao_kuhn.js"></script>
     <script src="chapters/cap_peru.js"></script>
-    <script src="chapters/cap_revolucoes.js"></script>
+    <script src="chapters/cap_gettier.js"></script>
+    <script src="chapters/cap_metodo.js"></script>
+    <script src="chapters/cap_observacao.js"></script>
+    <script src="chapters/cap_positivismo.js"></script>
 
-    <!-- 4. Motor do aplicativo -->
+    <!-- Engine -->
     <script src="js/graph.js"></script>
     <script src="js/story.js"></script>
     <script src="js/interaction.js"></script>

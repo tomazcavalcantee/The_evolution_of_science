@@ -1,51 +1,96 @@
 {
     "_comment": [
-        "chapters.json — Registro de todos os capítulos do projeto.",
-        "",
-        "PARA COLABORADORES:",
-        "  Ao criar um novo capítulo, adicione uma entrada aqui.",
-        "  O 'id' deve ser idêntico ao chapterId em data.js e ao nome",
-        "  do arquivo em chapters/  (sem a extensão .js).",
-        "",
-        "Campos obrigatórios: id, title, status, edgeId",
-        "Campos opcionais:    author, description, notes"
+        "chapters.json — Registro de todos os capítulos.",
+        "Ao criar um novo capítulo, adicione uma entrada aqui.",
+        "'id' deve ser idêntico ao chapterId em data.js e ao nome do arquivo .js"
     ],
     "chapters": [
         {
             "id": "cap_demarcacao",
-            "title": "O Problema da Demarcação",
-            "edgeId": "edge_demarcacao",
+            "title": "Critérios de Demarcação",
+            "edgeId": "edge_demarcacao_thagard_popper",
+            "debateClassId": "demarcacao",
             "status": "stub",
             "author": "",
-            "description": "Debate interativo entre Thagard e Popper sobre o critério de demarcação entre ciência e pseudociência.",
+            "description": "Thagard vs Popper sobre falseabilidade e critérios histórico-sociais.",
+            "notes": ""
+        },
+        {
+            "id": "cap_demarcacao_kuhn",
+            "title": "Demarcação e Anomalias",
+            "edgeId": "edge_demarcacao_popper_kuhn",
+            "debateClassId": "demarcacao",
+            "status": "stub",
+            "author": "",
+            "description": "Popper descarta teorias refutadas; Kuhn mostra que cientistas ignoram anomalias por longos períodos.",
             "notes": ""
         },
         {
             "id": "cap_peru",
             "title": "O Peru de Russell",
-            "edgeId": "edge_peru",
-            "status": "stub",
+            "edgeId": "edge_inducao_ind_emp",
+            "debateClassId": "inducao",
+            "status": "done",
             "author": "",
             "description": "Ilustração do problema da indução através da parábola do peru de Bertrand Russell.",
             "notes": ""
         },
         {
-            "id": "cap_revolucoes",
-            "title": "Revoluções Científicas",
-            "edgeId": "edge_paradigmas",
+            "id": "cap_gettier",
+            "title": "O Problema de Gettier",
+            "edgeId": "edge_gettier_platao",
+            "debateClassId": "conhecimento",
             "status": "stub",
             "author": "",
-            "description": "Debate sobre modelos de progresso científico: acumulação linear (Popper) vs. rupturas de paradigma (Kuhn).",
-            "notes": ""
+            "description": "Análise do artigo de 1963 de Edmund Gettier contra a definição tripartite de conhecimento.",
+            "notes": "Referência: Dutra (2010), Moser (2005)"
+        },
+        {
+            "id": "cap_metodo",
+            "title": "Dedução vs. Indução",
+            "edgeId": "edge_metodo_bacon_descartes",
+            "debateClassId": "metodo",
+            "status": "stub",
+            "author": "",
+            "description": "Descartes e Bacon discutindo a fundação do método científico.",
+            "notes": "Referência: Bacon (Novum Organon), Dutra caps 4 e 5"
+        },
+        {
+            "id": "cap_observacao",
+            "title": "A Observação não é Neutra",
+            "edgeId": "edge_observacao_positivismo_popper",
+            "debateClassId": "observacao",
+            "status": "stub",
+            "author": "",
+            "description": "Como a observação depende da teoria, refutando o positivismo lógico e o empirismo estrito.",
+            "notes": "Referência: Chalmers (caps 2 e 3), Popper (1959)"
+        },
+        {
+            "id": "cap_positivismo",
+            "title": "O Ápice Empirista",
+            "edgeId": "edge_indutivismo_positivismo",
+            "debateClassId": "metodo",
+            "status": "stub",
+            "author": "",
+            "description": "A formulação do Positivismo Lógico baseada no indutivismo.",
+            "notes": "Referência: Chalmers (cap 1)"
         }
     ],
+    "_debateClasses": [
+        "demarcacao   — O que separa ciência de pseudociência?",
+        "inducao      — Como justificar inferências indutivas?",
+        "conhecimento — O que é conhecimento?",
+        "metodo       — Como a ciência deve investigar?",
+        "observacao   — A observação é neutra?"
+    ],
     "_schema": {
-        "id":          "string — chave única, igual ao nome do arquivo .js",
-        "title":       "string — título legível exibido para referência",
-        "edgeId":      "string — id da aresta em gameData.edges que lança este capítulo",
-        "status":      "enum: 'stub' | 'in-progress' | 'done'",
-        "author":      "string — nome ou e-mail do colaborador responsável",
-        "description": "string — resumo do que o capítulo deve cobrir",
-        "notes":       "string — observações livres para a equipe"
+        "id":            "string — igual ao nome do arquivo .js",
+        "title":         "string — título legível",
+        "edgeId":        "string — id da aresta em gameData.edges",
+        "debateClassId": "string — id da classe em gameData.debateClasses",
+        "status":        "enum: stub | in-progress | done",
+        "author":        "string — responsável",
+        "description":   "string — resumo do conteúdo",
+        "notes":         "string — observações livres"
     }
 }

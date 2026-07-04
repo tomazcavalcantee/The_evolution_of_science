@@ -1,24 +1,18 @@
 /**
  * story.js — Painel narrativo (lado direito da tela)
  *
- * Responsabilidades:
- *   - Renderizar o texto de introdução estático
+ * Papel:
+ *   - Renderizar o texto de introdução
  *   - Renderizar os detalhes de uma aresta ao ser clicada
- *   - Lançar o capítulo interativo correspondente via App.chapters
+ *   - Lançar o capítulo via App.chapters
  *
  * Depende de: state.js (App.chapters), data.js (gameData)
- * Não depende de: graph.js, interaction.js
  */
 
 
-/**
- * Preenche a zona de introdução (#intro-content) com os parágrafos
- * definidos em gameData.intro. Chamada uma única vez na inicialização.
- */
 function renderInitialStory() {
     const introEl = document.getElementById('intro-content');
     introEl.innerHTML = '';
-
     gameData.intro.forEach(text => {
         const p = document.createElement('p');
         p.innerHTML = text;
@@ -28,28 +22,39 @@ function renderInitialStory() {
 
 
 /**
- * Preenche a zona dinâmica (#detail-content e #button-container)
- * com as informações da aresta clicada e o botão de lançamento do capítulo.
+ * Preenche a zona dinâmica com as informações da aresta clicada.
  *
- * @param {EdgeData} edgeData - Objeto da aresta vindo de gameData.edges.
+ * @param {EdgeData}    edgeData
+ * @param {DebateClass} debateClass - objeto da classe (cor, label, ícone)
  */
-function renderEdgeDetails(edgeData) {
-    const detailEl  = document.getElementById('detail-content');
+function renderEdgeDetails(edgeData, debateClass) {
+    const detailEl     = document.getElementById('detail-content');
     const btnContainer = document.getElementById('button-container');
 
-    // Força o replay da animação de surgimento (fade-in)
+    // Registra a edge selecionada no estado
+    App.state.selectedEdgeId = edgeData.id;
+
+    // Replay da animação fade-in
     detailEl.classList.remove('fade-in');
-    void detailEl.offsetWidth; // Trick para reiniciar a animação CSS
+    void detailEl.offsetWidth;
     detailEl.classList.add('fade-in');
 
+    // Badge da classe de debate (faixa colorida com o nome da classe)
+    const badgeColor = debateClass ? debateClass.color : '#999';
+    const badgeLabel = debateClass ? debateClass.label : edgeData.debateClassId;
+    const classDesc  = debateClass ? debateClass.desc  : '';
+
     detailEl.innerHTML = `
+        <div class="debate-class-badge" style="border-color:${badgeColor}; color:${badgeColor};">
+            ${badgeLabel}
+        </div>
+        <p class="debate-class-desc">${classDesc}</p>
         <h3>${edgeData.title}</h3>
         <p>${edgeData.desc}</p>
     `;
 
     btnContainer.innerHTML = '';
-    const btn = createChapterButton(edgeData);
-    btnContainer.appendChild(btn);
+    btnContainer.appendChild(createChapterButton(edgeData, debateClass));
 }
 
 
@@ -58,52 +63,59 @@ function renderEdgeDetails(edgeData) {
 // ------------------------------------------------------------------
 
 /**
- * Cria o botão "Iniciar Debate" para o capítulo associado à aresta.
- * Se o capítulo ainda não estiver registrado em App.chapters, exibe
- * uma mensagem de aviso em vez de lançar.
- *
- * @param {EdgeData} edgeData
- * @returns {HTMLButtonElement}
+ * Cria o botão de iniciar debate. Desabilita se o capítulo
+ * não está registrado (com feedback "Em breve").
  */
-function createChapterButton(edgeData) {
+function createChapterButton(edgeData, debateClass) {
     const btn = document.createElement('button');
-    btn.className = 'btn-choice active';
-    btn.innerHTML = `${edgeData.icon} Iniciar Debate`;
+    const icon  = debateClass ? debateClass.icon : '';
+    const isRegistered = !!App.chapters[edgeData.chapterId];
 
-    btn.addEventListener('click', () => launchChapter(edgeData.chapterId));
+    if (isRegistered) {
+        btn.className = 'btn-choice active';
+        btn.innerHTML = `${icon} Iniciar Debate`;
+
+        if (debateClass) {
+            btn.style.setProperty('--btn-class-color', debateClass.color);
+            btn.classList.add('btn-choice--colored');
+        }
+
+        btn.addEventListener('click', () => launchChapter(edgeData.chapterId));
+    } else {
+        // Capítulo não registrado — botão desabilitado
+        btn.className = 'btn-choice btn-choice--coming-soon';
+        btn.innerHTML = `${icon} Em breve`;
+        btn.disabled = true;
+        btn.title = 'Este capítulo ainda não foi implementado.';
+    }
 
     return btn;
 }
 
 
-/**
- * Lança o capítulo identificado por `chapterId`.
- * O capítulo deve estar registrado via App.registerChapter() em seu arquivo.
- *
- * @param {string} chapterId
- */
 function launchChapter(chapterId) {
     const chapter = App.chapters[chapterId];
 
     if (!chapter) {
-        console.warn(
-            `[story.js] Capítulo "${chapterId}" não encontrado em App.chapters.\n` +
-            `Verifique se o arquivo chapters/${chapterId}.js está incluído no index.html.`
-        );
-
-        // Feedback visual provisório para o colaborador que ainda não implementou o capítulo
+        console.warn(`[story.js] Capítulo "${chapterId}" não encontrado.`);
         const detailEl = document.getElementById('detail-content');
-        detailEl.innerHTML += `
-            <p style="color: var(--accent-red); font-style: italic;">
-                ⚠️ Capítulo <strong>${chapterId}</strong> ainda não implementado.<br>
-                Crie o arquivo <code>chapters/${chapterId}.js</code> e registre-o com
-                <code>App.registerChapter("${chapterId}", { start(container) { ... } })</code>.
-            </p>
-        `;
+        if (detailEl) {
+            detailEl.innerHTML += '<p class="chapter-not-found">⚠ Capítulo não encontrado.</p>';
+        }
         return;
     }
 
-    // Passa o contêiner de detalhes para o capítulo renderizar sua cena
-    const container = document.getElementById('detail-content');
-    chapter.start(container);
+    // Registra a transição no estado
+    App.enterChapter(chapterId);
+
+    // Transição de Interface
+    const mapUi = document.getElementById('map-ui');
+    const chapterUi = document.getElementById('chapter-ui');
+
+    mapUi.style.display = 'none';
+    
+    chapterUi.innerHTML = '';
+    chapterUi.style.display = 'flex';
+
+    chapter.start(chapterUi);
 }

@@ -8,55 +8,72 @@
  * 1. Copie este arquivo para `chapters/cap_meu_tema.js`
  *    (o nome deve ser igual ao `chapterId` em gameData.edges).
  *
- * 2. Substitua "cap_meu_tema" pelo seu chapterId real em todos os lugares.
+ * 2. Substitua "cap_meu_tema" por seu chapterId real (em 3 lugares).
  *
- * 3. Implemente o método `start(container)`:
- *    - `container` é o <div id="detail-content"> do painel lateral.
- *    - Você pode usar innerHTML, appendChild, ou qualquer lógica de UI.
- *    - Para debates interativos, adicione botões com event listeners.
+ * 3. Preencha `title`, e opcionalmente `background`, `chars` e `story`.
+ *    - Se `story` estiver presente, o ChapterEngine cuida do diálogo.
+ *    - Se `chars` e `background` estiverem presentes, o ChapterEngine
+ *      renderiza a cena SVG com fade e highlight de personagem.
+ *    - Se nenhum dos dois estiver presente, mostra um stub "não implementado".
  *
- * 4. Adicione seu arquivo em dois lugares do index.html:
- *    a) <script src="chapters/cap_meu_tema.js"></script>
- *    b) A entrada correspondente em chapters.json.
+ * 4. Adicione o <script> em index.html ANTES de graph.js.
  *
  * 5. Em data.js, adicione uma aresta com `chapterId: "cap_meu_tema"`.
+ *
+ * 6. Atualize chapters.json com os metadados do capítulo.
  * ============================================================
+ *
+ * Exemplo mínimo (stub):
+ *
+ *   App.registerChapter("cap_meu_tema", {
+ *       id: "cap_meu_tema",
+ *       title: "Título do Debate",
+ *       start(container) {
+ *           this.engine = new ChapterEngine(this, container);
+ *           this.engine.start();
+ *       },
+ *   });
+ *
+ * Exemplo com diálogo e cena:
+ *
+ *   App.registerChapter("cap_meu_tema", {
+ *       id: "cap_meu_tema",
+ *       title: "Título do Debate",
+ *       background: "imgs/meu_cenario.svg",
+ *       chars: {
+ *           "Filósofo A": { x: 100, y: 500, width: 200, height: 250, file: "a.svg" },
+ *           "Filósofo B": { x: 600, y: 500, width: 200, height: 250, file: "b.svg" },
+ *       },
+ *       story: [
+ *           { speaker: "Filósofo A", text: "Primeira fala..." },
+ *           { speaker: "Filósofo B", text: "Resposta..." },
+ *       ],
+ *       start(container) {
+ *           this.engine = new ChapterEngine(this, container);
+ *           this.engine.start();
+ *       },
+ *   });
  */
 
 App.registerChapter("cap_meu_tema", {
+    id: "cap_meu_tema",
+    title: "Título do Debate",
 
-    /**
-     * Ponto de entrada do capítulo.
-     * Chamado por story.js quando o usuário clica em "Iniciar Debate".
-     *
-     * @param {HTMLElement} container - O div #detail-content do painel lateral.
-     */
+    // Descomente e preencha para adicionar cena SVG:
+    // background: "imgs/cenario.svg",
+    // chars: {
+    //     "Filósofo A": { x: 100, y: 500, width: 200, height: 250, file: "a.svg" },
+    //     "Filósofo B": { x: 600, y: 500, width: 200, height: 250, file: "b.svg" },
+    // },
+
+    // Descomente e preencha para adicionar diálogo:
+    // story: [
+    //     { speaker: "Filósofo A", text: "Primeira fala..." },
+    //     { speaker: "Filósofo B", text: "Resposta..." },
+    // ],
+
     start(container) {
-        container.innerHTML = `
-            <h3>Título do Debate</h3>
-            <p>Descrição introdutória da cena interativa...</p>
-
-            <p><em>Implemente sua cena aqui.</em></p>
-        `;
-
-        // Exemplo de botão de escolha interativa:
-        // const btn = document.createElement('button');
-        // btn.className = 'btn-choice';
-        // btn.textContent = 'Minha opção';
-        // btn.addEventListener('click', () => this._handleChoice('opcao_a', container));
-        // container.appendChild(btn);
-    },
-
-    // ------------------------------------------------------------------
-    // Métodos auxiliares internos do capítulo (prefixo _ por convenção)
-    // ------------------------------------------------------------------
-
-    /**
-     * Exemplo de handler para escolha do usuário.
-     * @param {string} choice
-     * @param {HTMLElement} container
-     */
-    _handleChoice(choice, container) {
-        container.innerHTML = `<p>Você escolheu: <strong>${choice}</strong>.</p>`;
+        this.engine = new ChapterEngine(this, container);
+        this.engine.start();
     },
 });

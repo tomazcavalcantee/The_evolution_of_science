@@ -1,79 +1,48 @@
 /**
- * cap_peru.js — O Peru de Russell (Indutivismo vs. Empiricismo)
+ * cap_peru.js — O Peru de Russell (Bacon vs. Hume)
  *
- * TODO: Implementar a cena interativa do debate.
- *       Consulte chapters/_template.js para o passo a passo.
+ * Implementação baseada no trabalho de [amigo], integrada à arquitetura do projeto.
+ *
+ * O capítulo ocupa DUAS áreas ao mesmo tempo:
+ *   • SVG (#graph-container / panGroup) → cena visual: cenário + personagens
+ *   • Sidebar (#chapter-ui / container)  → diálogo + botões de controle
+ *
+ * Assets necessários em imgs/ (já incluídos no projeto):
+ *   cenario.svg, bacon.svg, peru.svg, hume.svg
+ *
+ * Usa ChapterEngine para toda a infraestrutura (diálogo, navegação, cena).
  */
 
 App.registerChapter("cap_peru", {
-    start(container) {
-        container.innerHTML = `
-            <h3>O Peru de Russell</h3>
-            <p>
-                <em>Cena interativa ainda não implementada.</em><br>
-                Edite <code>chapters/cap_peru.js</code> para construir o debate.
-            </p>
-        `;
 
-        this.renderBackground();
+    id: "cap_peru",
+    title: "O Peru de Russell",
+    background: "imgs/cenario.svg",
+
+    // Posições e arquivos dos personagens no SVG
+    chars: {
+        "Bacon": { x: 80,  y: 500, width: 220, height: 250, file: "bacon.svg" },
+        "Peru":  { x: 330, y: 430, width: 310, height: 220, file: "peru.svg"  },
+        "Hume":  { x: 650, y: 500, width: 240, height: 270, file: "hume.svg"  },
     },
 
-    async renderBackground() {
-        const { panGroup } = App.state;
-        const svg = document.getElementById('graph-container');
+    // Roteiro — cada entrada é uma fala exibida no painel lateral
+    story: [
+        { speaker: "Bacon", text: "Sábia decisão, jogador. Você escolheu o caminho da prática e da observação." },
+        { speaker: "Hume",  text: "Sua fé na constância é quase tocante, Bacon." },
+        { speaker: "Bacon", text: "A experiência é a única base segura para a verdade." },
+        { speaker: "Hume",  text: "Mas o ontem jamais dita o amanhã." },
+    ],
 
-        panGroup.classList.remove('fade-out');
-        void panGroup.offsetWidth; // Trick para reiniciar a animação CSS
-        panGroup.classList.add('fade-out');
-        
-        // Guard: remove tudo exceto o bg-rect antes de redesenhar
-        await new Promise(resolve => setTimeout(resolve, 500)); // Aguarda a animação terminar
+    // ------------------------------------------------------------------
+    // Ponto de entrada — chamado por story.js
+    // ------------------------------------------------------------------
 
-        const bgRect = document.getElementById('map-bg-capture');
-
-        panGroup.innerHTML = '';
-        panGroup.classList.remove('fade-out');
-        
-        if (bgRect) panGroup.appendChild(bgRect);
-
-        // Reinicia a posição da câmera
-        App.state.currentPan = {x: 0, y: 0};
-        panGroup.setAttribute(
-            "transform",
-            `translate(${App.state.currentPan.x}, ${App.state.currentPan.y})`
-        );
-
-        // Desenha o cenário de fundo
-        const { x, y, width, height } = svg.getBBox();
-        const padding = 5;
-        const groundHeight = 250;
-
-        const sky = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        sky.setAttribute("x", x);
-        sky.setAttribute("y", y - padding);
-        sky.setAttribute("width", width);
-        sky.setAttribute("height", height - groundHeight + padding);
-        sky.setAttribute("fill", "#8ecae6");
-        
-        const ground = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        ground.setAttribute("x", x);
-        ground.setAttribute("y", height - groundHeight);
-        ground.setAttribute("width", width);
-        ground.setAttribute("height", groundHeight + padding);
-        ground.setAttribute("fill", "#6a994e");
-        
-        const sun = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        sun.setAttribute("cx", width - 60);
-        sun.setAttribute("cy", 60);
-        sun.setAttribute("r", 50);
-        sun.setAttribute("fill", "#f4d35e");
-
-        panGroup.appendChild(sky);
-        panGroup.appendChild(ground);
-        panGroup.appendChild(sun);
-
-        panGroup.classList.remove('fade-in');
-        void panGroup.offsetWidth; // Trick para reiniciar a animação CSS
-        panGroup.classList.add('fade-in');
+    /**
+     * @param {HTMLElement} container — o div #chapter-ui do painel lateral
+     */
+    start(container) {
+        this.engine = new ChapterEngine(this, container);
+        this.engine.start();
     },
 });

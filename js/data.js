@@ -1,28 +1,19 @@
 /**
  * data.js — Fonte da verdade do mapa epistêmico
  *
- * PARA COLABORADORES:
- *   - Para adicionar um filósofo: insira um objeto em `gameData.nodes`.
- *   - Para adicionar uma disputa: insira um objeto em `gameData.edges`
- *     e crie o arquivo correspondente em `chapters/`.
- *   - As coordenadas x/y são relativas ao viewBox 1000×800 do SVG.
- *   - Os `chapterId` devem ser únicos e corresponder ao nome do arquivo
- *     em `chapters/` e à entrada em `chapters.json`.
+ *   - Filósofos → gameData.nodes
+ *   - Classes de debate → gameData.debateClasses
+ *   - Arestas → gameData.edges  (referenciam um debateClassId)
+ *   - Ícones SVG → objeto Icons (declarado antes de gameData)
+ *
+ *   Entre dois filósofos pode haver MAIS DE UMA aresta, desde que
+ *   pertençam a debateClasses diferentes. O motor cuida do visual.
  */
 
 
 // ------------------------------------------------------------------
 // Ícones SVG inline
-// IMPORTANTE: deve vir ANTES de gameData, pois é referenciado nas arestas.
 // ------------------------------------------------------------------
-
-/**
- * Ícones SVG inline usados nos botões de ação das arestas.
- *
- * PARA COLABORADORES:
- *   Ao adicionar uma nova aresta, adicione seu ícone aqui e referencie
- *   como `icon: Icons.meu_icone` no objeto da aresta em gameData.edges.
- */
 const Icons = {
 
     demarcacao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -54,65 +45,181 @@ const Icons = {
         </g>
     </svg>`,
 
-    revolucoes: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="12 2 2 22 22 22"/>
-        <path d="m2 22 10-10"/>
-        <path d="m12 12 10 10"/>
-    </svg>`,
+    conhecimento: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    
+    metodo: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
+    
+    observacao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
 };
 
 
 // ------------------------------------------------------------------
 // Dados do mapa
 // ------------------------------------------------------------------
-
 const gameData = {
 
-    // Texto de introdução exibido sempre no painel lateral
+    // Texto de introdução no painel lateral
     intro: [
         "Quais discussões protagonizaram os séculos de estudo sobre o conhecimento? E como os diferentes pontos de vista encaram diferentes problemas?",
-        "<strong>Explore o mapa ao lado.</strong> Você pode arrastar os filósofos para organizá-los ou arrastar o fundo do mapa.",
-        "Clique nas linhas de conexão para revelar as disputas históricas.",
+        "<strong>Explore o mapa abaixo:</strong> Arraste os filósofos para reorganizá-los ou arraste o fundo para navegar pelo papiro.",
+        "As linhas de conexão representam <strong>classes de debate</strong> — confira a legenda no mapa. Clique em uma linha para revelar a disputa.",
     ],
 
-    // Nós — cada filósofo/corrente no mapa
+    // ------------------------------------------------------------------
+    // Nós
+    // ------------------------------------------------------------------
+    /**
+     * @typedef {Object} NodeData
+     * @property {string} id
+     * @property {string} label
+     * @property {number} x      - Posição inicial X (viewBox 0–1000)
+     * @property {number} y      - Posição inicial Y (viewBox 0–800)
+     * @property {string} color  - Cor do bonequinho (hex ou var CSS)
+     */
     nodes: [
-        { id: "thagard",     label: "Paul Thagard",  x: 150, y: 150, color: "#27ae60" },
-        { id: "popper",      label: "Karl Popper",   x: 850, y: 150, color: "#d35400" },
-        { id: "kuhn",        label: "Thomas Kuhn",   x: 500, y: 400, color: "#7f8c8d" },
-        { id: "indutivista", label: "Indutivismo",   x: 150, y: 700, color: "var(--indutivista-color)" },
-        { id: "empiricista", label: "Empiricismo",   x: 850, y: 700, color: "var(--empiricista-color)" },
+        { id: "thagard",     label: "Paul Thagard",   x: 150, y: 150, color: "#27ae60" },
+        { id: "popper",      label: "Karl Popper",    x: 800, y: 150, color: "#d35400" },
+        { id: "kuhn",        label: "Thomas Kuhn",    x: 500, y: 450, color: "#7f8c8d" },
+        { id: "bacon",       label: "Francis Bacon",  x: 150, y: 680, color: "var(--indutivista-color)",    img: "imgs/bacon.svg" },
+        { id: "hume",        label: "David Hume",     x: 500, y: 550, color: "var(--empiricista-color)",    img: "imgs/hume.svg" },
+        { id: "gettier",     label: "Edmund Gettier", x: 150, y: 350, color: "#9b59b6" },
+        { id: "platao",      label: "Platão", x: 350, y: 300, color: "#f39c12" }, // Platão / CVJ
+        { id: "descartes",   label: "René Descartes", x: 500, y: 200, color: "#2980b9" },
+        { id: "carnap", label: "Rudolf Carnap", x: 800, y: 680, color: "#8e44ad" },
     ],
 
-    // Arestas — cada disputa filosófica entre dois nós
+    // ------------------------------------------------------------------
+    // Classes de debate
+    // ------------------------------------------------------------------
+    /**
+     * @typedef {Object} DebateClass
+     * @property {string} id      - Chave única; usada em edges.debateClassId
+     * @property {string} label   - Nome exibido na legenda e no painel
+     * @property {string} color   - Cor das arestas desta classe (hex)
+     * @property {string} icon    - SVG inline para o botão de ação
+     * @property {string} desc    - Descrição geral da classe (exibida no painel)
+     *
+     */
+    debateClasses: [
+        {
+            id: "demarcacao",
+            label: "Problema da Demarcação",
+            color: "#8e0000",
+            icon: Icons.demarcacao,
+            desc: "O que separa a ciência legítima da pseudociência?",
+        },
+        {
+            id: "inducao",
+            label: "Problema da Indução",
+            color: "#1a5276",
+            icon: Icons.peru,
+            desc: "Com base em observações passadas, podemos concluir algo sobre o futuro?",
+        },
+        {
+            id: "conhecimento",
+            label: "O que é Conhecimento?",
+            color: "#9b59b6", // Roxo
+            icon: Icons.conhecimento,
+            desc: "A epistemologia clássica define conhecimento de uma forma. Ela é suficiente?",
+        },
+        {
+            id: "metodo",
+            label: "Procedimentos e Método",
+            color: "#34495e", // Azul Escuro Metálico
+            icon: Icons.metodo,
+            desc: "Dedução, Indução e Abdução: Como a ciência deve investigar a natureza?",
+        },
+        {
+            id: "observacao",
+            label: "Limites da Observação",
+            color: "#e67e22", // Laranja Escuro
+            icon: Icons.observacao,
+            desc: "Nossos sentidos são neutros ou a observação depende da teoria?",
+        },
+    ],
+
+    // ------------------------------------------------------------------
+    // Arestas
+    // ------------------------------------------------------------------
+    /**
+     * @typedef {Object} EdgeData
+     * @property {string} id            - ID único do elemento SVG
+     * @property {string} source        - id do nó de origem
+     * @property {string} target        - id do nó de destino
+     * @property {string} debateClassId - id da classe em gameData.debateClasses
+     * @property {string} title         - Título específico desta disputa
+     * @property {string} desc          - Descrição desta disputa (painel lateral)
+     * @property {string} chapterId     - Capítulo lançado ao clicar "Iniciar Debate"
+     *
+     */
     edges: [
         {
-            id: "edge_demarcacao",
+            id: "edge_demarcacao_thagard_popper",
             source: "thagard",
             target: "popper",
-            title: "O Problema da Demarcação",
-            desc: "O que separa a Ciência real da Pseudociência? Popper propõe a falseabilidade (a ciência deve poder ser provada errada). Thagard argumenta que devemos olhar para critérios sociais e históricos, usando a Astrologia como exemplo.",
+            debateClassId: "demarcacao",
+            title: "Critérios de Demarcação",
+            desc: "Popper defende a falseabilidade como critério único. Thagard contra-argumenta que a demarcação exige critérios históricos e sociais — e usa a Astrologia como caso de teste.",
             chapterId: "cap_demarcacao",
-            icon: Icons.demarcacao,
         },
         {
-            id: "edge_peru",
-            source: "indutivista",
-            target: "empiricista",
-            title: "O Peru de Russell",
-            desc: "Se a ciência é baseada na indução (observar que o Sol nasce todo dia), quão seguros estamos do futuro? Russell ilustra com um peru que, após ser alimentado todo dia às 9h, conclui que isso é uma lei universal... até a véspera de Natal.",
-            chapterId: "cap_peru",
-            icon: Icons.peru,
-        },
-        {
-            id: "edge_paradigmas",
+            id: "edge_demarcacao_popper_kuhn",
             source: "popper",
             target: "kuhn",
-            title: "Revoluções Científicas",
-            desc: "A ciência progride pelo acúmulo linear de erros refutados (Popper) ou por saltos abruptos de paradigmas (Kuhn)? Para Kuhn, quando as anomalias se acumulam, a 'lente' do mundo quebra e é substituída por uma nova.",
-            chapterId: "cap_revolucoes",
-            icon: Icons.revolucoes,
+            debateClassId: "demarcacao",
+            title: "Demarcação e Anomalias",
+            desc: "Para Popper, uma teoria refutada deve ser descartada. Kuhn discorda: cientistas normalmente ignoram anomalias e só trocam de paradigma quando a pressão se torna insustentável.",
+            chapterId: "cap_demarcacao_kuhn",
+        },
+
+        {
+            id: "edge_inducao_ind_emp",
+            source: "bacon",
+            target: "hume",
+            debateClassId: "inducao",
+            title: "O Peru de Russel (Indutivista)",
+            desc: "Se a ciência é baseada em indução, quão seguros estamos do futuro? Russell ilustra com um peru alimentado todo dia às 9h que conclui tratar-se de uma lei universal... até a véspera de Natal.",
+            chapterId: "cap_peru",
+        },
+
+        {
+            id: "edge_gettier_platao",
+            source: "platao",
+            target: "gettier",
+            debateClassId: "conhecimento",
+            title: "O Problema de Gettier",
+            desc: "A tradição (desde Platão) definia conhecimento como 'Crença Verdadeira Justificada'. Em 1963, Gettier provou que você pode ter tudo isso... e acertar por pura sorte.",
+            chapterId: "cap_gettier",
+        },
+
+        {
+            id: "edge_metodo_bacon_descartes",
+            source: "descartes",
+            target: "bacon",
+            debateClassId: "metodo",
+            title: "Dedução vs. Indução",
+            desc: "No 'Novum Organon', Bacon lança as bases da indução empírica moderna. Em contrapartida, Descartes defende que verdades seguras só vêm da dedução racional rigorosa.",
+            chapterId: "cap_metodo",
+        },
+
+        {
+            id: "edge_observacao_positivismo_popper",
+            source: "carnap",
+            target: "popper",
+            debateClassId: "observacao",
+            title: "A Observação não é Neutra",
+            desc: "O Positivismo Lógico acreditava em uma base sólida de observações neutras. O Falsificacionismo Sofisticado (Chalmers/Popper) demonstra que toda observação já está impregnada de teoria.",
+            chapterId: "cap_observacao",
+        },
+        
+        {
+            id: "edge_indutivismo_positivismo",
+            source: "bacon",
+            target: "carnap",
+            debateClassId: "metodo",
+            title: "O Ápice Empirista",
+            desc: "Como o indutivismo ingênuo evoluiu para o Positivismo Lógico do Círculo de Viena, baseando o critério de significado estritamente na verificação empírica.",
+            chapterId: "cap_positivismo",
         },
     ],
 };

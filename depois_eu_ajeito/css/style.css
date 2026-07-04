@@ -1,0 +1,402 @@
+/* ==========================================================================
+   style.css — Estilos da Epistemologia Interativa
+   ==========================================================================
+   Seções:
+     1. Variáveis e Reset
+     2. Layout (container, painel do mapa, painel de história)
+     3. Elementos do Mapa SVG (arestas, bonequinhos)
+     4. Painel Narrativo (títulos, separador, zona de detalhes)
+     5. Botões de Ação
+     6. Animações
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Variáveis e Reset
+   -------------------------------------------------------------------------- */
+
+:root {
+    /* Paleta principal */
+    --bg-color:        #fdf6e3; /* Bege antigo (papel/papiro) */
+    --papyri-ink:      #2c1e16; /* Marrom escuro ferrogálica */
+    --accent-red:      #8e0000; /* Vinho clássico */
+    --line-color:      #d7ccc8; /* Cor das linhas de conexão no mapa */
+    --lightwood-color: #6e4216; /* Cor da moldura do mapa */
+
+    /* Cores dos filósofos / correntes (terracotas e naturais) */
+    --indutivista-color: #b97a57;
+    --empiricista-color: #5776b9;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    background-color: var(--bg-color);
+
+    /* Textura de ruído de papel sutil gerada via SVG inline */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+
+    color: var(--papyri-ink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   2. Layout
+   -------------------------------------------------------------------------- */
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1200px;
+    gap: 30px;
+}
+
+/* Classe utilitária para esconder elementos via JavaScript */
+.escondido {
+    display: none !important;
+}
+
+
+.map-container {
+    position: relative;
+    flex: 1.5;
+    background-color: #f5eedc; /* Levemente mais escuro que o papel para destacar */
+
+    /* Grid de cartógrafo + vinheta nas bordas */
+    background-image:
+        radial-gradient(circle at center, transparent 90%, rgba(44, 30, 22, 0.1) 100%),
+        linear-gradient(rgba(44, 30, 22, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(44, 30, 22, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+
+    /* Moldura "encadernada" com sombras múltiplas */
+    border: 3px solid var(--lightwood-color);
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow:
+        inset 0 0 0 6px var(--bg-color),          /* Borda interna clara */
+        inset 0 0 0 8px var(--lightwood-color),    /* Linha fina interna */
+        inset 0 0 50px rgba(44, 20, 6, 0.05),      /* Sombreamento profundo */
+        0 8px 20px rgba(0, 0, 0, 0.08);            /* Sombra externa */
+
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.map-container:active {
+    cursor: grabbing;
+}
+
+#graph-container {
+    width: 100%;
+    height: 100%;
+}
+
+.chapter-container {
+    cursor: default;
+}
+
+/* Painel narrativo (texto) */
+.story-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    transition: flex 0.5s ease-in-out; /* Transição suave caso o painel cresça */
+}
+
+/* --------------------------------------------------------------------------
+   3. Elementos do Mapa SVG
+   -------------------------------------------------------------------------- */
+
+/* Arestas — rotas de exploração tracejadas */
+.edge {
+    stroke: var(--line-color);
+    stroke-width: 5;
+    stroke-dasharray: 8 6;
+    stroke-linecap: round;
+    cursor: pointer;
+    transition: stroke 0.3s, stroke-width 0.2s, stroke-dasharray 0.2s;
+}
+
+.edge:hover {
+    stroke: var(--accent-red);
+    stroke-width: 7;
+    stroke-dasharray: 0;
+}
+
+.edge.active {
+    stroke: var(--papyri-ink);
+    stroke-width: 8;
+    stroke-dasharray: 0;
+}
+
+/* Bonequinhos (node-group) */
+.node-group {
+    cursor: grab;
+    filter: drop-shadow(2px 4px 3px rgba(44, 30, 22, 0.2));
+}
+
+.node-group:active {
+    cursor: grabbing;
+    filter: drop-shadow(4px 8px 4px rgba(44, 30, 22, 0.15));
+}
+
+.character-body,
+.character-head {
+    fill: var(--bg-color);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.character-eye {
+    fill: var(--papyri-ink);
+}
+
+.character-label {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. Painel Narrativo
+   -------------------------------------------------------------------------- */
+
+.story-panel p {
+    margin-bottom: 12px;
+    margin-top: 0;
+}
+
+.story-panel h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8em;
+    margin-top: 0;
+    color: var(--accent-red);
+    text-align: center;
+}
+
+/* Separador decorativo (gradiente de tinta) */
+.papyri-hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(
+        to right,
+        rgba(44, 30, 22, 0),
+        rgba(44, 30, 22, 0.5),
+        rgba(44, 30, 22, 0)
+    );
+    margin: 10px 0;
+}
+
+/* Zona de detalhes dinâmicos */
+#detail-content {
+    color: #4e342e; /* Tinta levemente mais suave que o ink principal */
+}
+
+#detail-content h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3em;
+    margin-bottom: 3px;
+    color: var(--papyri-ink);
+}
+
+/* Empurra os botões para o rodapé do painel */
+.interaction-buttons {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Botões de Ação
+   -------------------------------------------------------------------------- */
+
+.btn-choice {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--papyri-ink);
+    background-color: transparent;
+    border: 3px double var(--papyri-ink);
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-choice:hover {
+    color: var(--accent-red);
+    border-color: var(--accent-red);
+    background-color: rgba(142, 0, 0, 0.04);
+    transform: scale(1.02);
+}
+
+.btn-choice:active {
+    transform: scale(0.98);
+}
+
+/* Ícone SVG dentro dos botões */
+.btn-choice .btn-icon {
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+    margin-right: 12px;
+    margin-bottom: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Animações
+   -------------------------------------------------------------------------- */
+
+/* Surgimento suave ao carregar detalhes de uma aresta */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(5px); }
+    to   { opacity: 0; transform: translateY(0);   }
+}
+
+/* Animações do ícone do peru — ativadas ao passar o mouse no botão pai */
+
+.turkey-svg .turkey-head-group {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: 52px 70px; /* Pivô no centro do corpo */
+}
+
+.turkey-svg .turkey-wattle {
+    transition: fill 0.3s ease, transform 0.4s ease;
+    transform-origin: 22px 34px; /* Pivô na base da carúncula */
+}
+
+.btn-choice:hover .turkey-head-group {
+    transform: rotate(15deg) translateY(-3px); /* Peru ergue a cabeça esperançoso */
+}
+
+.btn-choice:hover .turkey-wattle {
+    fill: #e74c3c;                           /* Papada avermelhada de excitação */
+    transform: scale(1.15) rotate(-10deg);  /* Balança sutilmente */
+}
+
+/* --- Novas regras para o Modo Capítulo --- */
+
+/* Esconde o painel lateral quando o mapa expande */
+.fullscreen-map .story-panel {
+    display: none !important;
+}
+
+/* Faz o container do mapa ocupar todo o espaço */
+.fullscreen-map .map-container {
+    flex: 1;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Camada de interface de diálogo SOBRE o SVG */
+#chapter-ui-layer {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 800px;
+    z-index: 10;
+    pointer-events: none; /* Deixa cliques passarem para o mapa se necessário */
+}
+
+/* --- Estilos do Balão de Fala (Modo Capítulo) --- */
+
+.speech-bubble {
+    background: #fdf6e3;
+    border: 3px solid var(--papyri-ink);
+    border-radius: 15px;
+    padding: 15px;
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 1.2em;
+    color: var(--papyri-ink);
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; /* Garante que o balão receba o clique */
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.speech-bubble:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.speech-bubble:active {
+    transform: scale(0.98);
+}
+
+/* A pontinha do balão (borda escura externa) */
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 20px 20px 0;
+    border-style: solid;
+    border-color: var(--papyri-ink) transparent transparent transparent;
+    z-index: 1;
+}
+
+/* A pontinha do balão (miolo claro) */
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 18px 18px 0;
+    border-style: solid;
+    border-color: #fdf6e3 transparent transparent transparent;
+    z-index: 2;
+}
+
+/* Animação suave para o balão surgindo */
+.bubble-pop {
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform-origin: center bottom;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.6) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}

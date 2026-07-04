@@ -44,6 +44,7 @@ function setupSVGStructure() {
 
 function renderGraph() {
     const { panGroup } = App.state;
+    const svg = document.getElementById('graph-container');
     const bgRect = document.getElementById('map-bg-capture');
     panGroup.innerHTML = '';
     if (bgRect) panGroup.appendChild(bgRect);
@@ -66,7 +67,11 @@ function renderGraph() {
     });
 
     // Legenda
-    renderLegend(panGroup, classMap);
+    const oldLegend = svg.querySelector('.legend-group');
+    if (oldLegend) {
+        oldLegend.remove();
+    }
+    renderLegend(svg, classMap);
 
     // Invalida cache de drag (posições podem ter mudado)
     App.invalidateDragCache();
@@ -211,10 +216,10 @@ function createNodeSVG(node) {
 /**
  * Renderiza a legenda de classes de debate no canto do mapa SVG.
  *
- * @param {SVGGElement} panGroup — grupo raiz do mapa
+ * @param {SVGGElement} svgNode — grupo raiz do mapa
  * @param {Object} classMap — mapa debateClassId → debateClass
  */
-function renderLegend(panGroup, classMap) {
+function renderLegend(svgNode, classMap) {
     const classes = gameData.debateClasses;
     if (!classes || classes.length === 0) return;
 
@@ -283,7 +288,7 @@ function renderLegend(panGroup, classMap) {
         legendGroup.appendChild(label);
     });
 
-    panGroup.appendChild(legendGroup);
+    svgNode.appendChild(legendGroup);
 }
 
 

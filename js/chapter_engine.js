@@ -41,6 +41,12 @@ class ChapterEngine {
 
         this._renderSidebar();
 
+        const svg = document.getElementById('graph-container');
+        if (svg) {
+            const legend = svg.querySelector('.legend-group');
+            if (legend) legend.style.display = 'none';
+        }
+
         if (this.chapter.chars && this.chapter.background) {
             this._renderScene();
         }
@@ -58,6 +64,12 @@ class ChapterEngine {
 
         document.getElementById('chapter-ui').style.display = 'none';
         document.getElementById('map-ui').style.display     = 'block';
+
+        const svg = document.getElementById('graph-container');
+        if (svg) {
+            const legend = svg.querySelector('.legend-group');
+            if (legend) legend.style.display = '';
+        }
 
         renderGraph();
     }

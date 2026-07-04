@@ -80,12 +80,9 @@ const gameData = {
         { id: "thagard",     label: "Paul Thagard",   x: 150, y: 150, color: "#27ae60" },
         { id: "popper",      label: "Karl Popper",    x: 800, y: 150, color: "#d35400" },
         { id: "kuhn",        label: "Thomas Kuhn",    x: 500, y: 450, color: "#7f8c8d" },
+        { id: "lakatos",     label: "Imre Lakatos",   x: 800, y: 350, color: "#16a085" },
         { id: "bacon",       label: "Francis Bacon",  x: 150, y: 680, color: "var(--indutivista-color)",    img: "imgs/bacon.svg" },
         { id: "hume",        label: "David Hume",     x: 500, y: 550, color: "var(--empiricista-color)",    img: "imgs/hume.svg" },
-        { id: "gettier",     label: "Edmund Gettier", x: 150, y: 350, color: "#9b59b6" },
-        { id: "platao",      label: "Platão", x: 350, y: 300, color: "#f39c12" }, // Platão / CVJ
-        { id: "descartes",   label: "René Descartes", x: 500, y: 200, color: "#2980b9" },
-        { id: "carnap", label: "Rudolf Carnap", x: 800, y: 680, color: "#8e44ad" },
     ],
 
     // ------------------------------------------------------------------
@@ -116,25 +113,11 @@ const gameData = {
             desc: "Com base em observações passadas, podemos concluir algo sobre o futuro?",
         },
         {
-            id: "conhecimento",
-            label: "O que é Conhecimento?",
-            color: "#9b59b6", // Roxo
-            icon: Icons.conhecimento,
-            desc: "A epistemologia clássica define conhecimento de uma forma. Ela é suficiente?",
-        },
-        {
-            id: "metodo",
-            label: "Procedimentos e Método",
-            color: "#34495e", // Azul Escuro Metálico
+            id: "evolucao_ciencia",
+            label: "Evolução da Ciência",
+            color: "#6e4216", // Cor baseada na paleta do site (wood/brown)
             icon: Icons.metodo,
-            desc: "Dedução, Indução e Abdução: Como a ciência deve investigar a natureza?",
-        },
-        {
-            id: "observacao",
-            label: "Limites da Observação",
-            color: "#e67e22", // Laranja Escuro
-            icon: Icons.observacao,
-            desc: "Nossos sentidos são neutros ou a observação depende da teoria?",
+            desc: "Como a ciência progride e substitui suas teorias ao longo do tempo?",
         },
     ],
 
@@ -166,7 +149,7 @@ const gameData = {
             id: "edge_demarcacao_popper_kuhn",
             source: "popper",
             target: "kuhn",
-            debateClassId: "demarcacao",
+            debateClassId: "evolucao_ciencia",
             title: "Demarcação e Anomalias",
             desc: "Para Popper, uma teoria refutada deve ser descartada. Kuhn discorda: cientistas normalmente ignoram anomalias e só trocam de paradigma quando a pressão se torna insustentável.",
             chapterId: "cap_demarcacao_kuhn",
@@ -183,43 +166,23 @@ const gameData = {
         },
 
         {
-            id: "edge_gettier_platao",
-            source: "platao",
-            target: "gettier",
-            debateClassId: "conhecimento",
-            title: "O Problema de Gettier",
-            desc: "A tradição (desde Platão) definia conhecimento como 'Crença Verdadeira Justificada'. Em 1963, Gettier provou que você pode ter tudo isso... e acertar por pura sorte.",
-            chapterId: "cap_gettier",
+            id: "edge_evolucao_popper_lakatos",
+            source: "popper",
+            target: "lakatos",
+            debateClassId: "evolucao_ciencia",
+            title: "Programas de Pesquisa",
+            desc: "Lakatos propõe os Programas de Pesquisa Científica como uma síntese entre o falsificacionismo de Popper e os paradigmas de Kuhn, diferenciando um núcleo firme e um cinturão protetor de hipóteses.",
+            chapterId: "cap_lakatos",
         },
 
         {
-            id: "edge_metodo_bacon_descartes",
-            source: "descartes",
-            target: "bacon",
-            debateClassId: "metodo",
-            title: "Dedução vs. Indução",
-            desc: "No 'Novum Organon', Bacon lança as bases da indução empírica moderna. Em contrapartida, Descartes defende que verdades seguras só vêm da dedução racional rigorosa.",
-            chapterId: "cap_metodo",
-        },
-
-        {
-            id: "edge_observacao_positivismo_popper",
-            source: "carnap",
-            target: "popper",
-            debateClassId: "observacao",
-            title: "A Observação não é Neutra",
-            desc: "O Positivismo Lógico acreditava em uma base sólida de observações neutras. O Falsificacionismo Sofisticado (Chalmers/Popper) demonstra que toda observação já está impregnada de teoria.",
-            chapterId: "cap_observacao",
-        },
-        
-        {
-            id: "edge_indutivismo_positivismo",
-            source: "bacon",
-            target: "carnap",
-            debateClassId: "metodo",
-            title: "O Ápice Empirista",
-            desc: "Como o indutivismo ingênuo evoluiu para o Positivismo Lógico do Círculo de Viena, baseando o critério de significado estritamente na verificação empírica.",
-            chapterId: "cap_positivismo",
+            id: "edge_evolucao_kuhn_lakatos",
+            source: "kuhn",
+            target: "lakatos",
+            debateClassId: "evolucao_ciencia",
+            title: "Paradigmas vs Programas de Pesquisa",
+            desc: "Enquanto Kuhn foca nas mudanças de paradigma como revoluções, Lakatos argumenta que há uma escolha racional entre Programas de Pesquisa concorrentes baseada no seu poder heurístico.",
+            chapterId: "cap_kuhn_lakatos",
         },
     ],
 };

@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const stage = document.getElementById('orbit-stage');
 
     const personagens = [
-        'img/bacon.svg',
-        //'img/peru.svg',
-        'img/hume.svg',
-        'img/bacon.svg',
-        'img/hume.svg'
+        'imgs/bacon.svg',
+        'imgs/thagard-resized.svg',
+        'imgs/hume-flip.svg',
+        'imgs/kuhn-resized.svg',
+        'imgs/popper-resized.svg'
     ];
 
     // dimensões do "retângulo" da órbita (metade da largura/altura) e raio dos cantos

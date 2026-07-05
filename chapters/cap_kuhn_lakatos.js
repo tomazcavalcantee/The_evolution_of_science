@@ -7,24 +7,29 @@ App.registerChapter("cap_kuhn_lakatos", {
     title: "Paradigmas vs Programas de Pesquisa",
     background: "imgs/bg_kuhn_lakatos.jpg",
 
+    chars: {
+        "Kuhn":    { x: 150, y: 400, width: 300, height: 350, file: "kuhn.svg" },
+        "Lakatos": { x: 600, y: 400, width: 300, height: 350, file: "lakatos-brown.svg" },
+    },
+
     story: [
-        { speaker: "Narrador", text: "Você é um cientista em um laboratório. Suponha que você desenvolveu uma teoria T. Um cientista rival surge com uma anomalia. O que você escolhe?" },
-        { speaker: "Narrador", text: "O que fazer com sua teoria?", options: [
-            {id: "a", title: "Descartar Teoria", description: "Abandonar a teoria T diante da anomalia apresentada."},
-            {id: "b", title: "Manter Teoria", description: "Defender a teoria T e tentar acomodar a anomalia."},
+        { speaker: "Narrador", text: "Você é um cientista em um laboratório. Suponha que você desenvolveu uma teoria sólida. Subitamente, surge uma anomalia grave que sua teoria não explica." },
+        { speaker: "Narrador", text: "O que você escolhe fazer?", options: [
+            {id: "a", title: "Descartar a Teoria", description: "Abandonar sua teoria diante da anomalia avassaladora."},
+            {id: "b", title: "Manter a Teoria", description: "Defender sua teoria e tentar acomodar a anomalia."},
             { id: "a", story: [
-                { speaker: "Kuhn", text: "Perfeito! Você percebeu que precisamos mudar totalmente o sistema atual! Estamos em crise; inicie uma revolução e mude para o novo paradigma." },
-                { speaker: "Lakatos", text: "Uma 'revolução', Kuhn? O que você chama de revolução nada mais é do que psicologia das massas. A ciência avança pela competição racional entre programas de pesquisa, avaliando qual deles é progressivo, e não por surtos de mudança de mentalidade." },
-                { speaker: "Kuhn", text: "Você tenta impor uma racionalidade artificial, Lakatos. A mudança de paradigma é uma mudança de visão de mundo. Não há um supercritério neutro ou uma 'matemática da razão' que decida quando mudar. Dois cientistas em paradigmas diferentes olham para o mesmo ponto e enxergam coisas completamente distintas." },
-                { speaker: "Lakatos", text: "E é por isso que sua visão reduz a ciência a um jogo de poder e sociologia. A escolha por um novo programa pode e deve ser racional: nós mudamos quando o novo programa prevê fatos novos e surpreendentes que o antigo não conseguia explicar. Descartar a teoria sem um substituto progressivo é apenas caos, não progresso." },
+                { speaker: "Kuhn", text: "Perfeito! Você percebeu que precisamos de um novo sistema. Estamos em crise; é hora de uma revolução científica e mudar para um novo paradigma." },
+                { speaker: "Lakatos", text: "Uma 'revolução', Kuhn? O que você chama de revolução cheira a psicologia das massas. A ciência avança pela competição racional de programas, e não por conversões místicas." },
+                { speaker: "Kuhn", text: "Você tenta impor uma racionalidade artificial! A mudança de paradigma é uma ruptura profunda de visão de mundo. Não existe uma 'matemática' que decida quando mudar." },
+                { speaker: "Lakatos", text: "E é por isso que sua visão reduz a ciência a um jogo de sociologia irracional. Descartar a teoria vigente sem um substituto estritamente progressivo é pura confusão." }
             ]},
             { id: "b", story: [
-                { speaker: "Lakatos", text: "Você foi completamente racional. O que precisamos fazer é acrescentar uma nova hipótese para explicar a anomalia sem destruir o 'núcleo duro' do programa." },
-                { speaker: "Kuhn", text: "Racional, Lakatos? Isso é o bom e velho dogmatismo da ciência normal! O jogador está apenas articulando o paradigma atual para ignorar a realidade." },
-                { speaker: "Lakatos", text: "Não são remendos dogmáticos se as novas hipóteses forem progressivas! Se ao proteger o núcleo nós conseguirmos prever fatos novos que ninguém esperava, o programa continua vivo e racional. Dogmatismo seria manter o programa mesmo quando ele se torna cronicamente degenerativo." },
-                { speaker: "Kuhn", text: "Mas a história mostra que nenhum cientista fica calculando se o programa é 'progressivo' ou 'degenerativo' em uma planilha. Eles simplesmente partilham de uma fé comum em um paradigma. Você tenta salvar a racionalidade da ciência criando regras metodológicas retrospectivas que nenhum laboratório real segue no calor do momento." },
-            ]},
-        ]},
+                { speaker: "Lakatos", text: "Uma atitude madura. Nós preservamos o 'núcleo duro' do programa de pesquisa e ajustamos apenas as hipóteses periféricas para abrigar a anomalia." },
+                { speaker: "Kuhn", text: "Isso é o dogmatismo da 'ciência normal'! O jogador está apenas articulando as velhas regras do paradigma, varrendo os problemas para debaixo do tapete." },
+                { speaker: "Lakatos", text: "Não é dogmatismo se os ajustes nos levarem a descobertas inéditas! Nós somos racionais, protegemos o programa enquanto ele for vivo e progressivo." },
+                { speaker: "Kuhn", text: "Você cria regras retrospectivas ilusórias, Lakatos. Na prática, nenhum laboratório mede progresso assim. Eles seguem uma fé cega no paradigma até o colapso." }
+            ]}
+        ]}
     ],
 
     // Inicializa o capítulo com o motor de renderização

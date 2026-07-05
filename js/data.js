@@ -15,41 +15,27 @@
 // Ícones SVG inline
 // ------------------------------------------------------------------
 const Icons = {
-
-    demarcacao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-        <line x1="12" y1="22.08" x2="12" y2="12"/>
+    // Flask: Ciência vs Pseudociência
+    demarcacao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 2v7.31L2.07 19.24A2 2 0 0 0 3.75 22h16.5a2 2 0 0 0 1.68-2.76L14 9.31V2"/>
+        <line x1="8.5" y1="2" x2="15.5" y2="2"/>
+        <line x1="6" y1="14" x2="18" y2="14"/>
     </svg>`,
 
-    peru: `<svg class="btn-icon turkey-svg" viewBox="0 0 100 100" fill="none"
-        xmlns="http://www.w3.org/2000/svg" stroke="#2c1e16" stroke-width="6"
-        stroke-linecap="round" stroke-linejoin="round">
-        <g class="turkey-body-group">
-            <path d="M 40 85 L 40 95 L 32 95 M 65 85 L 65 95 L 73 95"/>
-            <path d="M 12 70 Q -5 45 35 25 L 65 25 Q 105 45 88 70 Z" fill="#b97a57"/>
-            <g fill="#5776b9" stroke-width="4">
-                <ellipse cx="25" cy="40" rx="8" ry="12"/>
-                <ellipse cx="38" cy="30" rx="6" ry="12"/>
-                <ellipse cx="62" cy="30" rx="6" ry="12"/>
-                <ellipse cx="75" cy="40" rx="8" ry="12"/>
-            </g>
-            <circle cx="52.5" cy="70" r="22" fill="#b97a57"/>
-        </g>
-        <g class="turkey-head-group">
-            <path d="M 40 55 C 20 40 10 30 25 15 C 35 5 45 15 50 30 C 52.5 45 45 55 40 55 Z" fill="#fdf6e3"/>
-            <circle cx="28" cy="22" r="3" fill="#2c1e16" stroke="none"/>
-            <path d="M 24 28 L 10 32 L 24 36 Z" fill="#f1c40f" stroke-linejoin="round"/>
-            <path class="turkey-wattle" d="M 22 34 L 14 55 Q 20 60 26 50" fill="#8e0000" stroke-linecap="round"/>
-        </g>
+    // Feather: O Peru Indutivista
+    peru: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+        <line x1="16" y1="8" x2="2" y2="22"/>
+        <line x1="17.5" y1="15" x2="9" y2="6.5"/>
     </svg>`,
 
-    conhecimento: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-    
-    metodo: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
-    
-    observacao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+    // Branch: Evolução da Ciência (Mudanças de paradigma)
+    evolucao: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="6" y1="3" x2="6" y2="15"/>
+        <circle cx="18" cy="6" r="3"/>
+        <circle cx="6" cy="18" r="3"/>
+        <path d="M18 9a9 9 0 0 1-9 9"/>
+    </svg>`
 };
 
 
@@ -77,10 +63,10 @@ const gameData = {
      * @property {string} color  - Cor do bonequinho (hex ou var CSS)
      */
     nodes: [
-        { id: "thagard",     label: "Paul Thagard",   x: 150, y: 150, color: "#27ae60" },
-        { id: "popper",      label: "Karl Popper",    x: 800, y: 150, color: "#d35400" },
-        { id: "kuhn",        label: "Thomas Kuhn",    x: 500, y: 450, color: "#7f8c8d" },
-        { id: "lakatos",     label: "Imre Lakatos",   x: 800, y: 350, color: "#16a085", img: "imgs/lak_piece_0.png" },
+        { id: "thagard",     label: "Paul Thagard",   x: 150, y: 200, color: "#27ae60",                   img: "imgs/thagard.svg" },
+        { id: "popper",      label: "Karl Popper",    x: 800, y: 200, color: "#d35400",                   img: "imgs/popper.svg" },
+        { id: "kuhn",        label: "Thomas Kuhn",    x: 400, y: 420, color: "#7f8c8d",                   img: "imgs/kuhn.svg"},
+        { id: "lakatos",     label: "Imre Lakatos",   x: 800, y: 350, color: "#16a085",                   img: "imgs/lakatos-brown.svg  " },
         { id: "bacon",       label: "Francis Bacon",  x: 150, y: 680, color: "var(--indutivista-color)",    img: "imgs/bacon.svg" },
         { id: "hume",        label: "David Hume",     x: 500, y: 550, color: "var(--empiricista-color)",    img: "imgs/hume.svg" },
     ],
@@ -116,7 +102,7 @@ const gameData = {
             id: "evolucao_ciencia",
             label: "Evolução da Ciência",
             color: "#6e4216", // Cor baseada na paleta do site (wood/brown)
-            icon: Icons.metodo,
+            icon: Icons.evolucao,
             desc: "Como a ciência progride e substitui suas teorias ao longo do tempo?",
         },
     ],

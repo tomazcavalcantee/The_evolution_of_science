@@ -166,7 +166,7 @@ function createNodeSVG(node) {
         imageEl.setAttribute("href", img);
         
         // Tamanho da sua arte (ajuste 60 para mais ou menos se necessário)
-        const size = 60; 
+        const size = 90; 
         imageEl.setAttribute("width", size);
         imageEl.setAttribute("height", size);
         
@@ -198,7 +198,7 @@ function createNodeSVG(node) {
     // O texto (Label) é comum a ambos
     const labelEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
     labelEl.setAttribute("x", x); 
-    labelEl.setAttribute("y", y + 45);
+    labelEl.setAttribute("y", y + 60);
     labelEl.setAttribute("text-anchor", "middle");
     labelEl.classList.add("character-label");
     labelEl.setAttribute("fill", color);

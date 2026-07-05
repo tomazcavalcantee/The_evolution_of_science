@@ -3,10 +3,18 @@
  *
  * Centraliza a lógica comum a todos os capítulos:
  *   - Navegação de volta ao mapa (goBack)
- *   - Sistema de diálogo linear (step / next / prev)
- *   - Renderização de sidebar com controles
+ *   - Sistema de diálogo com árvore de ramificação (escolhas do jogador)
+ *   - Renderização de sidebar com controles dinâmicos
  *   - Renderização de cenas SVG com personagens
  *   - Highlight de personagem falante
+ *   - Exibição de veredictos com título em destaque
+ *
+ * Estrutura de dados suportada:
+ *   story: [
+ *     { speaker, text },                          // fala linear
+ *     { speaker: "Narrador", text, options: [...] }, // ponto de escolha
+ *     { id: "x", story: [...] }                   // ramo de escolha
+ *   ]
  *
  * Uso:
  *   const engine = new ChapterEngine(chapter, container);
@@ -26,6 +34,13 @@ class ChapterEngine {
         this.container = container;
         this._step     = 0;
         this._active   = true;
+
+        // Pilha para navegação em ramificações.
+        // Cada entrada: { story: Array, step: number }
+        this._branchStack  = [];
+
+        // A story ativa no momento (começa como a raiz do capítulo)
+        this._currentStory = this.chapter.story || [];
     }
 
     // ------------------------------------------------------------------
@@ -41,6 +56,7 @@ class ChapterEngine {
 
         this._renderSidebar();
 
+        // Esconde a legenda do mapa durante o capítulo
         const svg = document.getElementById('graph-container');
         if (svg) {
             const legend = svg.querySelector('.legend-group');
@@ -65,6 +81,7 @@ class ChapterEngine {
         document.getElementById('chapter-ui').style.display = 'none';
         document.getElementById('map-ui').style.display     = 'block';
 
+        // Reexibe a legenda do mapa
         const svg = document.getElementById('graph-container');
         if (svg) {
             const legend = svg.querySelector('.legend-group');
@@ -83,7 +100,7 @@ class ChapterEngine {
      */
     _renderSidebar() {
         const title = this.chapter.title || 'Capítulo';
-        const hasStory = this.chapter.story && this.chapter.story.length > 0;
+        const hasStory = this._currentStory && this._currentStory.length > 0;
 
         this.container.innerHTML = `
             <div class="chapter-dialogue-box">
@@ -91,24 +108,10 @@ class ChapterEngine {
                 <p class="chapter-speaker"></p>
                 <p class="chapter-text"></p>
             </div>
-            <div class="chapter-controls">
-                ${hasStory ? '<button class="btn-chapter-prev btn-choice" style="display:none;">← Anterior</button>' : ''}
-                ${hasStory ? '<button class="btn-chapter-next btn-choice">Próximo →</button>' : ''}
-                <button class="btn-chapter-back btn-choice">← Voltar ao Mapa</button>
-            </div>
+            <div class="chapter-controls"></div>
         `;
 
-        // Eventos
-        const backBtn = this.container.querySelector('.btn-chapter-back');
-        if (backBtn) backBtn.addEventListener('click', () => this.goBack());
-
         if (hasStory) {
-            const nextBtn = this.container.querySelector('.btn-chapter-next');
-            const prevBtn = this.container.querySelector('.btn-chapter-prev');
-
-            if (nextBtn) nextBtn.addEventListener('click', () => this.nextStep());
-            if (prevBtn) prevBtn.addEventListener('click', () => this.prevStep());
-
             // Exibe a primeira fala após a cena carregar (delay para sincronizar com fade)
             setTimeout(() => this.showStep(0), 500);
         } else {
@@ -127,59 +130,133 @@ class ChapterEngine {
         if (textEl) {
             textEl.innerHTML = '<em>Cena interativa ainda não implementada.</em>';
         }
+        // Mostra apenas o botão de voltar
+        this._renderBackOnlyControls();
     }
 
     // ------------------------------------------------------------------
-    // Sistema de diálogo
+    // Utilitários de story
     // ------------------------------------------------------------------
 
     /**
-     * Exibe um passo específico do diálogo.
-     * @param {number} index — índice no array story
+     * Filtra apenas os passos de diálogo (exclui entradas de ramificação {id, story}).
+     * Passos de diálogo: objetos que têm 'speaker' e 'text'.
+     * @param {Array} storyArray — o array story a filtrar
+     * @returns {Array} — somente os passos que são falas ou pontos de escolha
+     */
+    _getDialogueSteps(storyArray) {
+        if (!storyArray) return [];
+        return storyArray.filter(entry => entry.speaker !== undefined);
+    }
+
+    /**
+     * Verifica se um passo é um ponto de escolha (possui array options).
+     * @param {Object} step — o passo atual
+     * @returns {boolean}
+     */
+    _isChoicePoint(step) {
+        return step && Array.isArray(step.options) && step.options.length > 0;
+    }
+
+    /**
+     * Verifica se um passo é um veredicto final.
+     * @param {Object} step — o passo atual
+     * @returns {boolean}
+     */
+    _isVerdict(step) {
+        return step && step.speaker === 'Verredito';
+    }
+
+    /**
+     * Encontra o ramo correspondente a uma escolha dentro do array options.
+     * Os ramos são entradas com { id, story: [...] } (sem title/description).
+     * @param {Array} options — o array options do ponto de escolha
+     * @param {string} choiceId — o id selecionado pelo jogador
+     * @returns {Object|null} — o ramo encontrado ou null
+     */
+    _findBranch(options, choiceId) {
+        return options.find(
+            opt => opt.id === choiceId && Array.isArray(opt.story)
+        ) || null;
+    }
+
+    /**
+     * Extrai os botões de opção de um array options.
+     * São as entradas que possuem 'title' e 'description' (sem story).
+     * @param {Array} options — o array options do ponto de escolha
+     * @returns {Array} — as opções clicáveis
+     */
+    _getOptionButtons(options) {
+        return options.filter(opt => opt.title !== undefined && !Array.isArray(opt.story));
+    }
+
+    // ------------------------------------------------------------------
+    // Sistema de diálogo com ramificação
+    // ------------------------------------------------------------------
+
+    /**
+     * Exibe um passo específico do diálogo na story ativa.
+     * Lida com falas normais, pontos de escolha e veredictos.
+     * @param {number} index — índice nos passos de diálogo da story ativa
      */
     showStep(index) {
         if (!this._active) return;
 
-        const story = this.chapter.story;
-        if (!story || story.length === 0) return;
+        // Obtém apenas os passos de diálogo (sem entradas de ramo)
+        const dialogueSteps = this._getDialogueSteps(this._currentStory);
+        if (!dialogueSteps || dialogueSteps.length === 0) return;
 
         this._step = index;
 
         const speakerEl = this.container.querySelector('.chapter-speaker');
         const textEl    = this.container.querySelector('.chapter-text');
-        const nextBtn   = this.container.querySelector('.btn-chapter-next');
-        const prevBtn   = this.container.querySelector('.btn-chapter-prev');
         if (!speakerEl || !textEl) return;
 
-        const isFinished = this._step >= story.length;
+        const isFinished = this._step >= dialogueSteps.length;
 
-        if (!isFinished) {
-            const fala = story[this._step];
+        if (isFinished) {
+            // Fim do ramo atual
+            speakerEl.textContent = '';
+            textEl.textContent    = 'Fim do debate.';
+            if (this.chapter.chars) this._highlightSpeaker(null);
+            this._renderBackOnlyControls();
+            return;
+        }
+
+        const fala = dialogueSteps[this._step];
+
+        // --- Veredicto ---
+        if (this._isVerdict(fala)) {
+            this._showVerdict(fala);
+            return;
+        }
+
+        // --- Ponto de escolha ---
+        if (this._isChoicePoint(fala)) {
             speakerEl.textContent = fala.speaker;
             textEl.textContent    = fala.text;
 
-            // Highlight do personagem falante na cena SVG
+            // Highlight do narrador na cena
             if (this.chapter.chars) {
                 this._highlightSpeaker(fala.speaker);
             }
 
-            // Botão Próximo
-            if (nextBtn) {
-                nextBtn.textContent   = (this._step < story.length - 1) ? 'Próximo →' : 'Encerrar';
-                nextBtn.style.display = '';
-            }
-
-            // Botão Anterior
-            if (prevBtn) {
-                prevBtn.style.display = (this._step > 0) ? '' : 'none';
-            }
-        } else {
-            speakerEl.textContent = '';
-            textEl.textContent    = 'Fim do debate.';
-            if (this.chapter.chars) this._highlightSpeaker(null);
-            if (nextBtn) nextBtn.style.display = 'none';
-            if (prevBtn) prevBtn.style.display = 'none';
+            // Renderiza os botões de escolha
+            this._renderChoiceControls(fala.options);
+            return;
         }
+
+        // --- Fala normal ---
+        speakerEl.textContent = fala.speaker;
+        textEl.textContent    = fala.text;
+
+        // Highlight do personagem falante na cena SVG
+        if (this.chapter.chars) {
+            this._highlightSpeaker(fala.speaker);
+        }
+
+        // Renderiza controles de navegação linear
+        this._renderLinearControls(dialogueSteps);
     }
 
     /** Avança para o próximo passo do diálogo. */
@@ -194,6 +271,158 @@ class ChapterEngine {
             this._step--;
             this.showStep(this._step);
         }
+    }
+
+    // ------------------------------------------------------------------
+    // Renderização de controles
+    // ------------------------------------------------------------------
+
+    /**
+     * Renderiza os botões de navegação linear (← Anterior / Próximo →).
+     * @param {Array} dialogueSteps — passos filtrados da story ativa
+     */
+    _renderLinearControls(dialogueSteps) {
+        const controls = this.container.querySelector('.chapter-controls');
+        if (!controls) return;
+
+        const isLast = this._step >= dialogueSteps.length - 1;
+
+        controls.innerHTML = '';
+
+        // Botão Anterior (oculto no primeiro passo, exceto se veio de uma branch)
+        if (this._step > 0) {
+            const prevBtn = document.createElement('button');
+            prevBtn.className   = 'btn-choice';
+            prevBtn.textContent = '← Anterior';
+            prevBtn.addEventListener('click', () => this.prevStep());
+            controls.appendChild(prevBtn);
+        }
+
+        // Botão Próximo / Encerrar
+        const nextBtn = document.createElement('button');
+        nextBtn.className   = 'btn-choice';
+        nextBtn.textContent = isLast ? 'Encerrar' : 'Próximo →';
+        nextBtn.addEventListener('click', () => this.nextStep());
+        controls.appendChild(nextBtn);
+
+        // Botão Voltar ao Mapa
+        const backBtn = document.createElement('button');
+        backBtn.className   = 'btn-choice';
+        backBtn.textContent = '← Voltar ao Mapa';
+        backBtn.addEventListener('click', () => this.goBack());
+        controls.appendChild(backBtn);
+    }
+
+    /**
+     * Renderiza os botões de escolha em um ponto de ramificação.
+     * Esconde os controles lineares e exibe as opções com título e descrição.
+     * @param {Array} options — o array options do ponto de escolha
+     */
+    _renderChoiceControls(options) {
+        const controls = this.container.querySelector('.chapter-controls');
+        if (!controls) return;
+
+        controls.innerHTML = '';
+
+        // Extrai as opções clicáveis (com title e description)
+        const buttons = this._getOptionButtons(options);
+
+        buttons.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-choice btn-choice-option';
+
+            // Conteúdo do botão: título em negrito + descrição abaixo
+            btn.innerHTML = `
+                <span class="btn-choice-title">${opt.title}</span>
+                <span class="btn-choice-desc">${opt.description}</span>
+            `;
+
+            btn.addEventListener('click', () => this._selectChoice(options, opt.id));
+            controls.appendChild(btn);
+        });
+
+        // Botão Voltar ao Mapa (sempre presente)
+        const backBtn = document.createElement('button');
+        backBtn.className   = 'btn-choice';
+        backBtn.textContent = '← Voltar ao Mapa';
+        backBtn.addEventListener('click', () => this.goBack());
+        controls.appendChild(backBtn);
+    }
+
+    /**
+     * Renderiza apenas o botão de voltar ao mapa (para veredictos e fim de ramo).
+     */
+    _renderBackOnlyControls() {
+        const controls = this.container.querySelector('.chapter-controls');
+        if (!controls) return;
+
+        controls.innerHTML = '';
+
+        const backBtn = document.createElement('button');
+        backBtn.className   = 'btn-choice';
+        backBtn.textContent = '← Voltar ao Mapa';
+        backBtn.addEventListener('click', () => this.goBack());
+        controls.appendChild(backBtn);
+    }
+
+    // ------------------------------------------------------------------
+    // Lógica de ramificação
+    // ------------------------------------------------------------------
+
+    /**
+     * Processa a seleção de uma escolha pelo jogador.
+     * Empilha o estado atual e entra no ramo selecionado.
+     * @param {Array} options — o array options do ponto de escolha
+     * @param {string} choiceId — o id da opção escolhida
+     */
+    _selectChoice(options, choiceId) {
+        // Encontra o ramo correspondente
+        const branch = this._findBranch(options, choiceId);
+        if (!branch || !branch.story) return;
+
+        // Empilha o estado atual para possível navegação futura
+        this._branchStack.push({
+            story: this._currentStory,
+            step:  this._step
+        });
+
+        // Entra no novo ramo
+        this._currentStory = branch.story;
+        this._step = 0;
+
+        // Exibe o primeiro passo do ramo
+        this.showStep(0);
+    }
+
+    // ------------------------------------------------------------------
+    // Exibição de veredicto
+    // ------------------------------------------------------------------
+
+    /**
+     * Exibe um veredicto final com título em destaque e texto explicativo.
+     * Após o veredicto, mostra apenas o botão de voltar.
+     * @param {Object} fala — a entrada de veredicto { speaker: "Verredito", title, text }
+     */
+    _showVerdict(fala) {
+        const speakerEl = this.container.querySelector('.chapter-speaker');
+        const textEl    = this.container.querySelector('.chapter-text');
+        if (!speakerEl || !textEl) return;
+
+        // Título do veredicto em destaque
+        speakerEl.innerHTML = `<span class="verdict-label">Veredicto</span>`;
+        textEl.innerHTML = `
+            <strong class="verdict-title">${fala.title}</strong>
+            <br><br>
+            ${fala.text}
+        `;
+
+        // Remove highlight de personagens (veredicto é narrado)
+        if (this.chapter.chars) {
+            this._highlightSpeaker(null);
+        }
+
+        // Mostra apenas o botão de voltar ao mapa
+        this._renderBackOnlyControls();
     }
 
     // ------------------------------------------------------------------

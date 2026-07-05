@@ -7,6 +7,11 @@ App.registerChapter("cap_kuhn_lakatos", {
     title: "Paradigmas vs Programas de Pesquisa",
     background: "imgs/bg_kuhn_lakatos.jpg",
 
+    chars: {
+        "Kuhn":    { x: 150, y: 400, width: 300, height: 350, file: "kuhn.svg" },
+        "Lakatos": { x: 600, y: 400, width: 300, height: 350, file: "lakatos-brown.svg" },
+    },
+
     story: [
         { speaker: "Narrador", text: "Você é um cientista em um laboratório. Suponha que você desenvolveu uma teoria T. Um cientista rival surge com uma anomalia. O que você escolhe?" },
         { speaker: "Narrador", text: "O que fazer com sua teoria?", options: [

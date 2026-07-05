@@ -12,6 +12,11 @@ App.registerChapter("cap_demarcacao", {
     title: "O Problema da Demarcação",
     background: "imgs/bg_demarcacao.jpg",
 
+    chars: {
+        "Popper":  { x: 150, y: 400, width: 300, height: 350, file: "popper.svg"  },
+        "Thagard": { x: 600, y: 400, width: 300, height: 350, file: "thagard.svg" },
+    },
+
     // Roteiro — cada entrada é uma fala exibida no painel lateral
     story: [
         { speaker: "Popper", text: "Para mim, a linha que divide a ciência de uma farsa é nítida: é o critério da falsificabilidade." },

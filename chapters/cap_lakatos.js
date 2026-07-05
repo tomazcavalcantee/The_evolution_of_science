@@ -8,6 +8,11 @@ App.registerChapter("cap_lakatos", {
     title: "Programas de Pesquisa",
     background: "imgs/bg_lakatos.jpg",
 
+    chars: {
+        "Popper":  { x: 150, y: 400, width: 300, height: 350, file: "popper.svg" },
+        "Lakatos": { x: 600, y: 400, width: 300, height: 350, file: "lakatos-brown.svg" },
+    },
+
     story: [
         { speaker: "Popper", text: "A verdadeira atitude científica é a atitude crítica. Se uma teoria falha em um teste rigoroso, como o experimento de Michelson-Morley fez com o éter luminífero, ela deve ser descartada. Tentar salvá-la com remendos é uma manobra convencionalista e pura covardia intelectual!" },
         { speaker: "Lakatos", text: "Você é ingênuo, Karl. Nenhuma teoria nasce perfeita; todas nascem em um oceano de anomalias. A ciência não funciona por refutações instantâneas. Nós temos um 'núcleo duro' de crenças fundamentais que protegemos, e apenas ajustamos as hipóteses auxiliares do 'cinturão protetor'." },

@@ -63,7 +63,7 @@ class ChapterEngine {
             if (legend) legend.style.display = 'none';
         }
 
-        if (this.chapter.chars && this.chapter.background) {
+        if (this.chapter.chars || this.chapter.background) {
             this._renderScene();
         }
     }
@@ -438,15 +438,16 @@ class ChapterEngine {
         if (!panGroup) return;
 
         panGroup.querySelectorAll('.char-instance').forEach(g => {
-            g.style.opacity = speakerName ? '0.70' : '1';
-            g.style.filter  = '';
+            g.style.opacity = speakerName ? '0.4' : '1';
+            g.style.filter  = speakerName ? 'grayscale(50%)' : 'none';
         });
 
         if (speakerName) {
-            const active = panGroup.querySelector(`.char-${speakerName.toLowerCase()}`);
+            const safeName = speakerName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const active = panGroup.querySelector(`.char-${safeName}`);
             if (active) {
                 active.style.opacity = '1';
-                active.style.filter  = 'drop-shadow(0 0 10px rgba(255,210,80,0.85))';
+                active.style.filter  = 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.9)) brightness(1.15)';
             }
         }
     }
@@ -478,14 +479,15 @@ class ChapterEngine {
 
         // Plano de fundo
         if (this.chapter.background) {
-            this._addImage(panGroup, this.chapter.background, 0, 0, 1000, 800);
+            this._addImage(panGroup, this.chapter.background, 0, 0, 1000, 800, 'none');
         }
 
         // Personagens
         if (this.chapter.chars) {
             Object.entries(this.chapter.chars).forEach(([name, info]) => {
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                g.classList.add('char-instance', `char-${name.toLowerCase()}`);
+                const safeName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                g.classList.add('char-instance', `char-${safeName}`);
                 this._addImage(g, `imgs/${info.file}`, info.x, info.y, info.width, info.height);
                 panGroup.appendChild(g);
             });
@@ -497,14 +499,14 @@ class ChapterEngine {
     }
 
     /** Cria e insere um <image> SVG no elemento pai. */
-    _addImage(parent, href, x, y, width, height) {
+    _addImage(parent, href, x, y, width, height, preserve = 'xMidYMid meet') {
         const img = document.createElementNS("http://www.w3.org/2000/svg", "image");
         img.setAttributeNS(null, 'href',                href);
         img.setAttributeNS(null, 'x',                   x);
         img.setAttributeNS(null, 'y',                   y);
         img.setAttributeNS(null, 'width',               width);
         img.setAttributeNS(null, 'height',              height);
-        img.setAttributeNS(null, 'preserveAspectRatio', 'xMidYMid meet');
+        img.setAttributeNS(null, 'preserveAspectRatio', preserve);
         parent.appendChild(img);
     }
 }

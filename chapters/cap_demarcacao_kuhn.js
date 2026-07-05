@@ -7,6 +7,11 @@ App.registerChapter("cap_demarcacao_kuhn", {
     title: "A Ciência Realmente Cresce?",
     background: "imgs/bg_kuhn.jpg",
 
+    chars: {
+        "Popper": { x: 150, y: 400, width: 300, height: 350, file: "popper.svg" },
+        "Kuhn":   { x: 600, y: 400, width: 300, height: 350, file: "kuhn.svg" },
+    },
+
     story: [
         { speaker: "Narrador", text: "Você está monitorando um experimento de física de longo prazo. Durante semanas, o gráfico mostrou uma linha perfeitamente suave e previsível. De repente, na última execução, um único ponto de dados dispara descontroladamente para fora do gráfico, entrando em uma zona teoricamente impossível." },
         { speaker: "Narrador", text: "O que você escolhe fazer?", options: [

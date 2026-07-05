@@ -160,7 +160,7 @@ const gameData = {
             source: "bacon",
             target: "hume",
             debateClassId: "inducao",
-            title: "O Peru de Russel (Indutivista)",
+            title: "Peru Indutivista",
             desc: "Se a ciência é baseada em indução, quão seguros estamos do futuro? Russell ilustra com um peru alimentado todo dia às 9h que conclui tratar-se de uma lei universal... até a véspera de Natal.",
             chapterId: "cap_peru",
         },

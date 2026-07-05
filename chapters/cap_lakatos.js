@@ -6,6 +6,7 @@
 App.registerChapter("cap_lakatos", {
     id: "cap_lakatos",
     title: "Programas de Pesquisa",
+    background: "imgs/bg_lakatos.jpg",
 
     story: [
         { speaker: "Popper", text: "A verdadeira atitude científica é a atitude crítica. Se uma teoria falha em um teste rigoroso, como o experimento de Michelson-Morley fez com o éter luminífero, ela deve ser descartada. Tentar salvá-la com remendos é uma manobra convencionalista e pura covardia intelectual!" },

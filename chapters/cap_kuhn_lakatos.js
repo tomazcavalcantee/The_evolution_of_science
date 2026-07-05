@@ -5,6 +5,7 @@
 App.registerChapter("cap_kuhn_lakatos", {
     id: "cap_kuhn_lakatos",
     title: "Paradigmas vs Programas de Pesquisa",
+    background: "imgs/bg_kuhn_lakatos.jpg",
 
     story: [
         { speaker: "Narrador", text: "Você é um cientista em um laboratório. Suponha que você desenvolveu uma teoria T. Um cientista rival surge com uma anomalia. O que você escolhe?" },

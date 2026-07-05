@@ -5,6 +5,7 @@
 App.registerChapter("cap_demarcacao_kuhn", {
     id: "cap_demarcacao_kuhn",
     title: "A Ciência Realmente Cresce?",
+    background: "imgs/bg_kuhn.jpg",
 
     story: [
         { speaker: "Narrador", text: "Você está monitorando um experimento de física de longo prazo. Durante semanas, o gráfico mostrou uma linha perfeitamente suave e previsível. De repente, na última execução, um único ponto de dados dispara descontroladamente para fora do gráfico, entrando em uma zona teoricamente impossível." },

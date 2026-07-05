@@ -16,7 +16,7 @@
 App.registerChapter("cap_peru", {
 
     id: "cap_peru",
-    title: "O Peru de Russell",
+    title: "Peru Indutivista",
     background: "imgs/cenario.svg",
 
     // Posições e arquivos dos personagens no SVG

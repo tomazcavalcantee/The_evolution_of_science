@@ -63,9 +63,9 @@ const gameData = {
      * @property {string} color  - Cor do bonequinho (hex ou var CSS)
      */
     nodes: [
-        { id: "thagard",     label: "Paul Thagard",   x: 150, y: 150, color: "#27ae60",                   img: "imgs/thagard.svg" },
-        { id: "popper",      label: "Karl Popper",    x: 800, y: 150, color: "#d35400",                   img: "imgs/popper.svg" },
-        { id: "kuhn",        label: "Thomas Kuhn",    x: 500, y: 450, color: "#7f8c8d",                   img: "imgs/kuhn.svg"},
+        { id: "thagard",     label: "Paul Thagard",   x: 150, y: 200, color: "#27ae60",                   img: "imgs/thagard.svg" },
+        { id: "popper",      label: "Karl Popper",    x: 800, y: 200, color: "#d35400",                   img: "imgs/popper.svg" },
+        { id: "kuhn",        label: "Thomas Kuhn",    x: 400, y: 420, color: "#7f8c8d",                   img: "imgs/kuhn.svg"},
         { id: "lakatos",     label: "Imre Lakatos",   x: 800, y: 350, color: "#16a085",                   img: "imgs/lakatos-brown.svg  " },
         { id: "bacon",       label: "Francis Bacon",  x: 150, y: 680, color: "var(--indutivista-color)",    img: "imgs/bacon.svg" },
         { id: "hume",        label: "David Hume",     x: 500, y: 550, color: "var(--empiricista-color)",    img: "imgs/hume.svg" },

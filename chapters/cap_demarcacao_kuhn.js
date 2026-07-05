@@ -5,7 +5,7 @@
 App.registerChapter("cap_demarcacao_kuhn", {
     id: "cap_demarcacao_kuhn",
     title: "A Ciência Realmente Cresce?",
-    background: "imgs/bg_kuhn.jpg",
+    background: "imgs/bg_kuhn_popper.jpg",
 
     chars: {
         "Popper": { x: 150, y: 400, width: 300, height: 350, file: "popper.svg" },

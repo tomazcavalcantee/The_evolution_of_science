@@ -13,51 +13,51 @@ App.registerChapter("cap_demarcacao", {
     background: "imgs/bg_demarcacao.jpg",
 
     chars: {
-        "Popper":  { x: 150, y: 400, width: 300, height: 350, file: "popper.svg"  },
-        "Thagard": { x: 600, y: 400, width: 300, height: 350, file: "thagard.svg" },
+        "Popper":  { x: 150, y: 450, width: 300, height: 350, file: "popper.svg"  },
+        "Thagard": { x: 600, y: 450, width: 300, height: 350, file: "thagard.svg" },
     },
 
-    // Roteiro — cada entrada é uma fala exibida no painel lateral
     story: [
-        { speaker: "Popper", text: "Para mim, a linha que divide a ciência de uma farsa é nítida: é o critério da falsificabilidade." },
-        { speaker: "Popper", text: "Uma teoria só pode ser científica caso faça previsões ousadas que possam ser provadas erradas pela observação pública." },
-        { speaker: "Thagard", text: "Pura lógica não basta! Olhe para a Astrologia: astrólogos frequentemente fazem previsões específicas e testáveis sobre a vida das pessoas em seus mapas." },
-        { speaker: "Popper", text: "Ora, mas se a previsão falha, eles dão desculpas ou mudam as regras do jogo a fim de salvar suas hipóteses." },
-        { speaker: "Popper", text: "Isso é uma manobra convencionalista… uma covardia intelectual para blindar o dogma." },
-        { speaker: "Thagard", text: "Na verdade, o maior erro não está na falta de lógica, mas no isolamento da comunidade." },
-        { speaker: "Thagard", text: "A Astrologia é pseudociência porque se estagnou na história, ignora anomalias crônicas e se recusa em progredir frente a teorias melhores alternativas, como a psicologia contemporânea." },
-        { speaker: "Narrador", text: "Qual critério de demarcação você deseja apoiar para iniciar o jogo?", options: [
+        { speaker: "Popper", text: "Para mim, a linha que divide a ciência da pseudociência é nítida: o critério da falsificabilidade. Uma teoria só é científica se fizer previsões ousadas que possam ser provadas erradas publicamente." },
+        { speaker: "Thagard", text: "Pura lógica não basta, Popper! Olhe para a Astrologia: os astrólogos frequentemente fazem previsões testáveis em seus mapas. O problema não é a forma lógica, é a comunidade." },
+        { speaker: "Popper", text: "Mas se a previsão falha, eles dão desculpas ou mudam as regras do jogo para salvar a hipótese! Isso é uma manobra convencionalista, uma covardia intelectual para blindar o dogma." },
+        { speaker: "Thagard", text: "O verdadeiro problema da Astrologia é que ela estagnou no tempo. Ela ignora anomalias crônicas e recusa-se a progredir frente a teorias alternativas, como a psicologia contemporânea." },
+        { speaker: "Narrador", text: "Qual critério de demarcação você deseja apoiar?", options: [
             {id: "a", title: "A estrutura lógica", description: "O fator definidor da ciência é o risco nítido da teoria ser falseada."},
-            {id: "b", title: "A comunidade e a história", description: "O que define a ciência é se a prática mostra progresso ao longo do tempo e compete com alternativas."},
+            {id: "b", title: "A comunidade e a história", description: "O que define a ciência é o progresso histórico frente a alternativas."},
             { id: "a", story: [
-                { speaker: "Popper", text: "Excelente! Diante de um erro gritante no laboratório ou de um dado que foge do gráfico, a verdadeira ciência exige que se descarte a hipótese sem piedade. O progresso exige demolição!" },
-                { speaker: "Thagard", text: "Isso é irrealista e historicamente falso. Se fôssemos assim tão rígidos, a física teria abandonado o heliocentrismo de Copérnico, que nasceu com dados errados sobre o tamanho aparente de Vênus. Cientistas precisam de teimosia racional para resolver quebra-cabeças antes de jogar um paradigma fora." },
+                { speaker: "Popper", text: "Excelente! Diante de um erro gritante no laboratório, a verdadeira ciência exige que se descarte a hipótese sem piedade. O progresso exige demolição!" },
+                { speaker: "Thagard", text: "Isso é irrealista! Se fôssemos tão rígidos, a física teria abandonado o heliocentrismo, que nasceu com dados problemáticos. Cientistas precisam de 'teimosia racional'." },
                 { speaker: "Narrador", text: "O que deve acontecer quando um teste experimental contradiz uma teoria famosa?", options: [
-                    {id: "a", title: "Imediata eliminação", description: "A teoria falhou em um teste rigoroso, logo deve ser profundamente revisada ou eliminada sem hesitação."},
-                    {id: "b", title: "Proteção do núcleo", description: "O dado pode estar mal medido ou os instrumentos desajustados: vale a pena modificar hipóteses auxiliares para salvar a teoria principal."},
+                    {id: "a", title: "Imediata eliminação", description: "A teoria falhou, logo deve ser eliminada sem hesitação."},
+                    {id: "b", title: "Proteção do núcleo", description: "Vale a pena modificar hipóteses auxiliares para salvar a teoria principal."},
                     { id: "a", story: [
-                        { speaker: "Verredito", title: "falsificacionista convicto", text: "Para você, a demarcação é puramente lógica. Se uma prática não expõe seu pescoço ao erro através de enunciados claros, arriscados e falsificáveis, então não passa de dogma ou pseudociência. A ciência avança por conjecturas ousadas e refutações implacáveis." },
+                        { speaker: "Popper", text: "Exatamente! Qualquer tentativa de salvá-la é trair a atitude científica." },
+                        { speaker: "Narrador", text: "[VEREDITO: Falsificacionista Convicto] Para você, a demarcação é puramente lógica. Se a prática não expõe seu pescoço ao erro através de enunciados arriscados, é dogma." }
                     ]},
                     { id: "b", story: [
-                        { speaker: "Verredito", title: "sintetizador da complexidade", text: "Você buscou o equilíbrio metodológico. Entende que a ciência precisa sre rigorosa e de enunciados que são logicamente testáveis nas suas previsões. Mas, reconhece que na história real os cientistas protegem legitimamente suas teorias por meio de hipóteses auxiliares para dar tempo do paradigma florescer e resolver suas charadas." },
-                    ]},
-                ]},
+                        { speaker: "Thagard", text: "Uma postura sensata. Devemos proteger as teorias até que uma alternativa melhor se mostre." },
+                        { speaker: "Narrador", text: "[VEREDITO: Sintetizador da Complexidade] Entende que a ciência precisa ser testável, mas reconhece que historicamente proteger teorias ajuda a resolver anomalias complexas." }
+                    ]}
+                ]}
             ]},
             { id: "b", story: [
-                { speaker: "Thagard", text: "Perfeito. Devemos avaliar se uma disciplina é progressiva ou degenerescente ao longo do tempo. Programas científicos devem descobrir fenômenos novos, não apenas inventar desculpas ad hoc para suas anomalias." },
-                { speaker: "Popper", text: "Mas focar na psicologia do grupo ou em fatores sociais nos joga em um relativismo perigoso, Thagard! O critério deve ser lógico e universal: se nenhuma observação pública concebível puder refutar a teoria, ela simplesmente não é empírica." },
-                { speaker: "Narrador", text: "O que realmente transforma uma teoria ou doutrina em 'pseudociência'?", options: [
-                    {id: "a", title: "Infalibilidade lógica", description: "O fato da teoria ser desenhada de forma tão vaga que consegue explicar tudo, sendo imune a contestações."},
-                    {id: "b", title: "A recusa em evoluir", description: "A ausência crônica de progresso teórico ao longo das décadas e desprezo deliberado por teorias concorrentes melhores."},
+                { speaker: "Thagard", text: "Perfeito. Devemos avaliar se uma disciplina é progressiva ou degenerescente ao longo do tempo, e não julgar apenas uma afirmação isolada." },
+                { speaker: "Popper", text: "Focar na psicologia do grupo nos joga em um relativismo perigoso! O critério deve ser lógico, senão qualquer loucura se justifica pela 'comunidade'." },
+                { speaker: "Narrador", text: "O que realmente transforma uma doutrina em 'pseudociência'?", options: [
+                    {id: "a", title: "Infalibilidade lógica", description: "Ser imune a contestações experimentais diretas."},
+                    {id: "b", title: "A recusa em evoluir", description: "A ausência crônica de progresso e o desprezo por concorrentes."},
                     { id: "a", story: [
-                        { speaker: "Verredito", title: "falsificacionista convicto", text: "Para você, a demarcação é puramente lógica. Se uma prática não expõe seu pescoço ao erro através de enunciados claros, arriscados e falsificáveis, então não passa de dogma ou pseudociência. A ciência avança por conjecturas ousadas e refutações implacáveis." },
+                        { speaker: "Popper", text: "Um alívio. Uma teoria que explica tudo, no fundo, não explica nada." },
+                        { speaker: "Narrador", text: "[VEREDITO: Falsificacionista Convicto] Para você, a demarcação é puramente lógica. Se a prática não expõe seu pescoço ao erro, não passa de pseudociência." }
                     ]},
                     { id: "b", story: [
-                        { speaker: "Verredito", title: "epistemólogo contextualista", text: "Para você, o limite da ciência é histórico e social. Teorias enfrentam anomalias o tempo todo, mas uma prática só se torna uma pseudociência quando sua comunidade de praticantes se recusa a progredir, fica estagnada no tempo e ignora alternativas modernas melhores." },
-                    ]},
-                ]},
-            ]},
-        ]},
+                        { speaker: "Thagard", text: "Exato. A ciência é um empreendimento vivo. Quando a comunidade para de inovar, a ciência morre." },
+                        { speaker: "Narrador", text: "[VEREDITO: Epistemólogo Contextualista] O limite da ciência é histórico e social. Uma prática vira pseudociência quando estagna e ignora o avanço ao seu redor." }
+                    ]}
+                ]}
+            ]}
+        ]}
     ],
 
     start(container) {
